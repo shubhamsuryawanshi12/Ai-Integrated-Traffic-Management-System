@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanFlow Camera Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 32px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+        .card h3 {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #334155;
+        }
+        .stat:last-child { border-bottom: none; }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        .signal-display {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .signal-light {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #334155;
+            transition: all 0.3s;
+        }
+        .signal-light.active {
+            box-shadow: 0 0 20px currentColor;
+        }
+        .signal-red { background: #ef4444; color: #ef4444; }
+        .signal-yellow { background: #fbbf24; color: #fbbf24; }
+        .signal-green { background: #22c55e; color: #22c55e; }
+        .signal-light:not(.active) { opacity: 0.2; }
+        .chart-container {
+            height: 200px;
+            margin-top: 15px;
+        }
+        .lanes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .lane-box {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .lane-box h4 {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .lane-count {
+            font-size: 28px;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        .lane-queue {
+            font-size: 12px;
+            color: #f59e0b;
+            margin-top: 4px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-success { background: #22c55e; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .log-container {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+        .log-time { color: #64748b; }
+        .log-message { color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>📊 UrbanFlow Camera Dashboard</h1>
+            <p style="color: #64748b; margin-top: 5px;">Real-time Traffic Monitoring</p>
+        </div>
+        <div class="status-badge">
+            <div class="status-dot" id="statusDot"></div>
+            <span id="statusText">Waiting for data...</span>
+        </div>
+    </div>
+
+    <div class="grid">
+        <!-- Signal Status -->
+        <div class="card">
+            <h3>🚦 Traffic Signal</h3>
+            <div class="signal-display">
+                <div class="signal-light signal-red" id="lightRed"></div>
+                <div class="signal-light signal-yellow" id="lightYellow"></div>
+                <div class="signal-light signal-green" id="lightGreen"></div>
+            </div>
+            <div class="stat">
+                <span>Current Phase</span>
+                <span class="stat-value" id="currentPhase">-</span>
+            </div>
+            <div class="stat">
+                <span>Duration</span>
+                <span class="stat-value" id="phaseDuration">0s</span>
+            </div>
+            <div class="stat">
+                <span>Cycle Time</span>
+                <span class="stat-value" id="cycleTime">-</span>
+            </div>
+        </div>
+
+        <!-- Vehicle Stats -->
+        <div class="card">
+            <h3>🚗 Vehicle Detection</h3>
+            <div class="stat">
+                <span>Total Vehicles</span>
+                <span class="stat-value" id="totalVehicles">0</span>
+            </div>
+            <div class="stat">
+                <span>Queue Length</span>
+                <span class="stat-value" id="queueLength">0</span>
+            </div>
+            <div class="stat">
+                <span>Avg Speed</span>
+                <span class="stat-value" id="avgSpeed">0 m/s</span>
+            </div>
+            <div class="stat">
+                <span>Processing FPS</span>
+                <span class="stat-value" id="processingFps">0</span>
+            </div>
+        </div>
+
+        <!-- Lane Breakdown -->
+        <div class="card">
+            <h3>🛣️ Lane Statistics</h3>
+            <div class="lanes-grid">
+                <div class="lane-box">
+                    <h4>NORTH</h4>
+                    <div class="lane-count" id="northCount">0</div>
+                    <div class="lane-queue" id="northQueue">Queue: 0</div>
+                </div>
+                <div class="lane-box">
+                    <h4>SOUTH</h4>
+                    <div class="lane-count" id="southCount">0</div>
+                    <div class="lane-queue" id="southQueue">Queue: 0</div>
+                </div>
+                <div class="lane-box">
+                    <h4>EAST</h4>
+                    <div class="lane-count" id="eastCount">0</div>
+                    <div class="lane-queue" id="eastQueue">Queue: 0</div>
+                </div>
+                <div class="lane-box">
+                    <h4>WEST</h4>
+                    <div class="lane-count" id="westCount">0</div>
+                    <div class="lane-queue" id="westQueue">Queue: 0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Collection -->
+        <div class="card">
+            <h3>💾 Data Collection</h3>
+            <div class="stat">
+                <span>Status</span>
+                <span class="stat-value" id="collectStatus">Idle</span>
+            </div>
+            <div class="stat">
+                <span>Samples</span>
+                <span class="stat-value" id="sampleCount">0</span>
+            </div>
+            <div class="controls">
+                <button class="btn btn-success" onclick="startCollection()">Start</button>
+                <button class="btn btn-danger" onclick="stopCollection()">Stop</button>
+                <button class="btn btn-primary" onclick="exportData()">Export</button>
+            </div>
+        </div>
+
+        <!-- Vehicle Count Chart -->
+        <div class="card" style="grid-column: span 2;">
+            <h3>📈 Vehicle Count History</h3>
+            <div class="chart-container">
+                <canvas id="vehicleChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="card">
+            <h3>📋 Activity Log</h3>
+            <div class="log-container" id="logContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Chart setup
+        const ctx = document.getElementById('vehicleChart').getContext('2d');
+        const vehicleChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Vehicles',
+                    data: [],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Queue',
+                    data: [],
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { display: false },
+                    y: { 
+                        beginAtZero: true,
+                        grid: { color: '#334155' },
+                        ticks: { color: '#94a3b8' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+
+        // Data update
+        const maxDataPoints = 50;
+
+        function updateChart(vehicles, queue) {
+            const now = new Date().toLocaleTimeString();
+            
+            vehicleChart.data.labels.push(now);
+            vehicleChart.data.datasets[0].data.push(vehicles);
+            vehicleChart.data.datasets[1].data.push(queue);
+            
+            if (vehicleChart.data.labels.length > maxDataPoints) {
+                vehicleChart.data.labels.shift();
+                vehicleChart.data.datasets[0].data.shift();
+                vehicleChart.data.datasets[1].data.shift();
+            }
+            
+            vehicleChart.update('none');
+        }
+
+        function addLog(message) {
+            const container = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <span class="log-time">[${new Date().toLocaleTimeString()}]</span>
+                <span class="log-message">${message}</span>
+            `;
+            container.insertBefore(entry, container.firstChild);
+            
+            // Keep only last 50 entries
+            while (container.children.length > 50) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        function updateSignalLights(state) {
+            document.querySelectorAll('.signal-light').forEach(el => el.classList.remove('active'));
+            if (state) {
+                const light = document.getElementById('light' + state.charAt(0).toUpperCase() + state.slice(1));
+                if (light) light.classList.add('active');
+            }
+        }
+
+        // Fetch data periodically
+        function fetchStatus() {
+            fetch('/api/status')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('statusDot').style.background = '#22c55e';
+                    document.getElementById('statusText').textContent = 
+                        `Frames: ${data.frame_count} | FPS: ${data.avg_fps}`;
+                    document.getElementById('sampleCount').textContent = data.collected_samples;
+                    document.getElementById('collectStatus').textContent = 
+                        data.is_collecting ? 'Recording' : 'Idle';
+                })
+                .catch(err => {
+                    document.getElementById('statusDot').style.background = '#ef4444';
+                    document.getElementById('statusText').textContent = 'Disconnected';
+                });
+        }
+
+        function fetchLatest() {
+            fetch('/api/latest')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || !data.timestamp) return;
+
+                    // Signal
+                    if (data.signal) {
+                        const state = data.signal.state;
+                        document.getElementById('currentPhase').textContent = state ? state.toUpperCase() : '-';
+                        document.getElementById('phaseDuration').textContent = 
+                            data.signal.duration ? data.signal.duration.toFixed(1) + 's' : '-';
+                        updateSignalLights(state);
+                    }
+
+                    // Vehicles
+                    if (data.vehicles) {
+                        document.getElementById('totalVehicles').textContent = data.vehicles.total || 0;
+                        document.getElementById('queueLength').textContent = data.vehicles.queue || 0;
+                        document.getElementById('avgSpeed').textContent = 
+                            (data.vehicles.speed || 0).toFixed(1) + ' m/s';
+                        
+                        updateChart(data.vehicles.total, data.vehicles.queue);
+                    }
+
+                    // Metrics
+                    if (data.metrics) {
+                        document.getElementById('processingFps').textContent = 
+                            (data.metrics.processing_fps || 0).toFixed(1);
+                    }
+                });
+        }
+
+        // API calls
+        function startCollection() {
+            fetch('/api/collect/start', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => addLog('Data collection started'));
+        }
+
+        function stopCollection() {
+            fetch('/api/collect/stop', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => addLog(`Collection stopped: ${data.samples} samples`));
+        }
+
+        function exportData() {
+            window.open('/api/collect/export', '_blank');
+            addLog('Data exported');
+        }
+
+        // Start polling
+        setInterval(fetchStatus, 2000);
+        setInterval(fetchLatest, 500);
+        
+        addLog('Dashboard initialized');
+    </script>
+</body>
+</html>

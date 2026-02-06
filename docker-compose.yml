@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./sumo_files:/app/sumo_files
+    environment:
+      - SUMO_HOME=/usr/share/sumo
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WDS_SOCKET_PORT=0
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+#  db:  # Optional: PostgreSQL/TimescaleDB or Redis as per prompt
+#    image: redis:7.2
+#    ports:
+#      - "6379:6379"
+
