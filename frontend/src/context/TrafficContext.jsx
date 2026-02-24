@@ -58,117 +58,90 @@ export const TrafficProvider = ({ children }) => {
     const [isConnected, setIsConnected] = useState(false);
     const [lastUpdate, setLastUpdate] = useState(null);
     const [useMockData, setUseMockData] = useState(true);
+    const [systemData, setSystemData] = useState({
+        weather: 'clear',
+        co2_saved_kg: 0,
+        emergency_active: false
+    });
 
     useEffect(() => {
         // Connect WebSocket
         WebSocketService.connect();
 
-        // Listen for updates
-        WebSocketService.on('connection_status', ({ connected }) => {
-            console.log("WebSocket connection status:", connected);
-            setIsConnected(connected);
-        });
+        // WebSocket Event Listeners
+        const onConnect = () => {
+            console.log("WebSocket Connected");
+            setIsConnected(true);
+        };
 
-        WebSocketService.on('traffic_update', (data) => {
-            console.log("WebSocket: traffic_update received", data);
-            setUseMockData(false); // Disable mock data once we get real data
+        const onDisconnect = () => {
+            console.log("WebSocket Disconnected");
+            setIsConnected(false);
+            setUseMockData(true); // Revert to mock if disconnected
+        };
 
-            if (data.intersections && data.intersections.length > 0) {
+        const onTrafficUpdate = (data) => {
+            // console.log("WebSocket: traffic_update received", data);
+            setIsConnected(true);
+            setUseMockData(false); // We have real data
+
+            if (data.intersections) {
                 setIntersections(data.intersections);
             }
 
             if (data.snapshot) {
-                setHistoricalData(prev => [...prev, data.snapshot].slice(-500));
+                setHistoricalData(prev => {
+                    const newData = [...prev, data.snapshot];
+                    return newData.slice(-50); // Keep last 50 points
+                });
+
+                // Extract system-wide metadata
+                setSystemData({
+                    weather: data.snapshot.weather || 'clear',
+                    co2_saved_kg: data.snapshot.co2_saved_kg || 0,
+                    emergency_active: data.snapshot.emergency_active || false
+                });
             }
             setLastUpdate(new Date());
-        });
+        };
 
-        WebSocketService.on('ai_decision', (decision) => {
-            setCurrentDecision(decision);
-        });
-
-        WebSocketService.on('emergency_alert', (alert) => {
+        const onAiDecision = (decision) => setCurrentDecision(decision);
+        const onEmergency = (alert) => {
             setEmergencyAlert(alert);
             setTimeout(() => setEmergencyAlert(null), 30000);
-        });
+        };
+        const onMetrics = (metrics) => setMetrics(metrics);
 
-        WebSocketService.on('metrics', (metrics) => {
-            setMetrics(metrics);
-        });
+        // Subscribe
+        WebSocketService.on('connect', onConnect);
+        WebSocketService.on('disconnect', onDisconnect);
+        WebSocketService.on('traffic_update', onTrafficUpdate);
+        WebSocketService.on('ai_decision', onAiDecision);
+        WebSocketService.on('emergency_alert', onEmergency);
+        WebSocketService.on('metrics', onMetrics);
 
-        // Simulate mock data updates when not connected
+        // Fallback Mock Data Loop
         const mockInterval = setInterval(() => {
             if (useMockData) {
-                // Update mock data randomly
+                // Determine if we should really randomize or just valid placeholder
+                // For now, randomize to show "activity" if backend is off
                 setIntersections(prev => prev.map(int => ({
                     ...int,
                     current_status: {
                         phase: ['green', 'yellow', 'red'][Math.floor(Math.random() * 3)]
                     },
                     traffic_data: {
+                        ...int.traffic_data,
                         vehicle_count: Math.floor(Math.random() * 60) + 5,
                         average_wait_time: Math.random() * 40 + 5
                     }
                 })));
 
-                // Add mock historical data
-                const timestamp = Date.now();
-
-                // Fetch REAL camera data if available
-                fetch('http://localhost:5000/api/latest')
-                    .then(res => res.json())
-                    .then(camData => {
-                        if (camData && camData.vehicles) {
-                            setIntersections(prev => prev.map(int => {
-                                // Update 'INT_A1' with REAL CAMERA DATA
-                                if (int.id === 'INT_A1') {
-                                    return {
-                                        ...int,
-                                        traffic_data: {
-                                            vehicle_count: camData.vehicles.total || 0,
-                                            average_wait_time: (camData.vehicles.queue || 0) * 2 + 5
-                                        }
-                                    };
-                                }
-                                // Keep other intersections random
-                                return {
-                                    ...int,
-                                    current_status: {
-                                        phase: ['green', 'yellow', 'red'][Math.floor(Math.random() * 3)]
-                                    },
-                                    traffic_data: {
-                                        vehicle_count: Math.floor(Math.random() * 60) + 5,
-                                        average_wait_time: Math.random() * 40 + 5
-                                    }
-                                };
-                            }));
-
-                            // Log real data point
-                            setHistoricalData(prev => [...prev, {
-                                timestamp,
-                                avg_queue_length: camData.vehicles.queue || 0
-                            }].slice(-100));
-                        } else {
-                            throw new Error("No camera data");
-                        }
-                    })
-                    .catch(() => {
-                        // Fallback to pure mock if camera offline
-                        setIntersections(prev => prev.map(int => ({
-                            ...int,
-                            current_status: {
-                                phase: ['green', 'yellow', 'red'][Math.floor(Math.random() * 3)]
-                            },
-                            traffic_data: {
-                                vehicle_count: Math.floor(Math.random() * 60) + 5,
-                                average_wait_time: Math.random() * 40 + 5
-                            }
-                        })));
-                        setHistoricalData(prev => [...prev, {
-                            timestamp,
-                            avg_queue_length: Math.random() * 20 + 5
-                        }].slice(-100));
-                    });
+                // Add mock history point
+                setHistoricalData(prev => [...prev, {
+                    timestamp: Date.now(),
+                    avg_queue_length: Math.random() * 20 + 5
+                }].slice(-50));
             }
         }, 3000);
 
@@ -176,7 +149,7 @@ export const TrafficProvider = ({ children }) => {
             WebSocketService.disconnect();
             clearInterval(mockInterval);
         };
-    }, [useMockData]);
+    }, []);
 
     const value = {
         intersections,
@@ -187,6 +160,7 @@ export const TrafficProvider = ({ children }) => {
         isConnected,
         lastUpdate,
         useMockData,
+        systemData,
         getIntersectionById: (id) => intersections.find(i => i.id === id),
         getHistoricalRange: (startTime, endTime) =>
             historicalData.filter(d => d.timestamp >= startTime && d.timestamp <= endTime),

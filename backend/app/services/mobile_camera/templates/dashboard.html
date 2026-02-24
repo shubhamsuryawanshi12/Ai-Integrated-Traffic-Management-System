@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UrbanFlow Camera Dashboard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0f172a;
@@ -15,173 +19,327 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .header {
+
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #1e293b;
         }
-        .header h1 {
-            font-size: 32px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+
+        .dashboard-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .dashboard-header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
         .status-badge {
             display: flex;
             align-items: center;
             gap: 8px;
             background: #1e293b;
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
         }
+
         .status-dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: #22c55e;
+            background: #ef4444;
             animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+        .status-dot.active {
+            background: #22c55e;
         }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
         }
+
         .card {
             background: #1e293b;
             border-radius: 12px;
             padding: 20px;
             border: 1px solid #334155;
+            transition: border-color 0.3s;
         }
+
+        .card:hover {
+            border-color: #3b82f6;
+        }
+
         .card h3 {
             font-size: 14px;
             color: #94a3b8;
-            margin-bottom: 15px;
-            text-transform: uppercase;
+            margin-bottom: 16px;
+            font-weight: 600;
         }
+
         .stat {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #334155;
+            font-size: 14px;
         }
-        .stat:last-child { border-bottom: none; }
+
+        .stat:last-child {
+            border-bottom: none;
+        }
+
         .stat-value {
-            font-size: 24px;
             font-weight: 700;
+            font-size: 16px;
             color: #3b82f6;
         }
-        .signal-display {
+
+        /* Signal Lights */
+        .signal-lights {
             display: flex;
-            gap: 15px;
             justify-content: center;
-            margin: 20px 0;
+            gap: 12px;
+            margin-bottom: 16px;
         }
+
         .signal-light {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 3px solid #334155;
-            transition: all 0.3s;
+            opacity: 0.2;
+            transition: opacity 0.3s, box-shadow 0.3s;
         }
+
         .signal-light.active {
-            box-shadow: 0 0 20px currentColor;
+            opacity: 1;
         }
-        .signal-red { background: #ef4444; color: #ef4444; }
-        .signal-yellow { background: #fbbf24; color: #fbbf24; }
-        .signal-green { background: #22c55e; color: #22c55e; }
-        .signal-light:not(.active) { opacity: 0.2; }
-        .chart-container {
-            height: 200px;
-            margin-top: 15px;
+
+        #lightRed {
+            background: #ef4444;
         }
+
+        #lightRed.active {
+            box-shadow: 0 0 20px #ef4444;
+        }
+
+        #lightYellow {
+            background: #fbbf24;
+        }
+
+        #lightYellow.active {
+            box-shadow: 0 0 20px #fbbf24;
+        }
+
+        #lightGreen {
+            background: #22c55e;
+        }
+
+        #lightGreen.active {
+            box-shadow: 0 0 20px #22c55e;
+        }
+
+        /* Lanes */
         .lanes-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
         }
+
         .lane-box {
             background: #0f172a;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
         }
+
         .lane-box h4 {
-            font-size: 12px;
+            font-size: 11px;
             color: #64748b;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
+
         .lane-count {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             color: #22c55e;
         }
+
         .lane-queue {
-            font-size: 12px;
-            color: #f59e0b;
-            margin-top: 4px;
+            font-size: 11px;
+            color: #f97316;
         }
+
+        /* Controls */
         .controls {
             display: flex;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px;
+            margin-top: 12px;
         }
+
         .btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             border: none;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, opacity 0.2s;
+            flex: 1;
         }
-        .btn:active { transform: scale(0.95); }
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-success { background: #22c55e; color: white; }
-        .btn-danger { background: #ef4444; color: white; }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-success {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Chart placeholder */
+        .chart-area {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bar-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 100%;
+            padding-top: 20px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #3b82f6, #8b5cf6);
+            border-radius: 2px 2px 0 0;
+            min-height: 2px;
+            transition: height 0.3s;
+        }
+
+        .chart-bar.queue-bar {
+            background: linear-gradient(to top, #f97316, #fbbf24);
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .chart-legend span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        .legend-dot.vehicles {
+            background: #3b82f6;
+        }
+
+        .legend-dot.queue {
+            background: #f97316;
+        }
+
+        /* Log */
         .log-container {
             max-height: 200px;
             overflow-y: auto;
-            background: #0f172a;
-            border-radius: 8px;
-            padding: 10px;
-            font-family: monospace;
             font-size: 12px;
+            font-family: monospace;
         }
+
         .log-entry {
             padding: 4px 0;
-            border-bottom: 1px solid #1e293b;
+            border-bottom: 1px solid #0f172a;
+            color: #94a3b8;
         }
-        .log-time { color: #64748b; }
-        .log-message { color: #94a3b8; }
+
+        .log-time {
+            color: #64748b;
+        }
+
+        .log-message {
+            color: #e2e8f0;
+        }
+
+        .grid-wide {
+            grid-column: span 2;
+        }
     </style>
 </head>
+
 <body>
-    <div class="header">
+    <!-- Header -->
+    <div class="dashboard-header">
         <div>
-            <h1>📊 UrbanFlow Camera Dashboard</h1>
-            <p style="color: #64748b; margin-top: 5px;">Real-time Traffic Monitoring</p>
+            <h1>🚦 UrbanFlow Camera Dashboard</h1>
+            <p>Real-time Traffic Monitoring</p>
         </div>
         <div class="status-badge">
-            <div class="status-dot" id="statusDot"></div>
-            <span id="statusText">Waiting for data...</span>
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Connecting...</span>
         </div>
     </div>
 
+    <!-- Main Grid -->
     <div class="grid">
-        <!-- Signal Status -->
+        <!-- Traffic Signal -->
         <div class="card">
-            <h3>🚦 Traffic Signal</h3>
-            <div class="signal-display">
-                <div class="signal-light signal-red" id="lightRed"></div>
-                <div class="signal-light signal-yellow" id="lightYellow"></div>
-                <div class="signal-light signal-green" id="lightGreen"></div>
+            <h3>🚥 TRAFFIC SIGNAL</h3>
+            <div class="signal-lights">
+                <div class="signal-light" id="lightRed"></div>
+                <div class="signal-light" id="lightYellow"></div>
+                <div class="signal-light" id="lightGreen"></div>
             </div>
             <div class="stat">
                 <span>Current Phase</span>
@@ -189,17 +347,17 @@
             </div>
             <div class="stat">
                 <span>Duration</span>
-                <span class="stat-value" id="phaseDuration">0s</span>
+                <span class="stat-value" id="phaseDuration">-</span>
             </div>
             <div class="stat">
                 <span>Cycle Time</span>
-                <span class="stat-value" id="cycleTime">-</span>
+                <span class="stat-value">45s</span>
             </div>
         </div>
 
-        <!-- Vehicle Stats -->
+        <!-- Vehicle Detection -->
         <div class="card">
-            <h3>🚗 Vehicle Detection</h3>
+            <h3>🚗 VEHICLE DETECTION</h3>
             <div class="stat">
                 <span>Total Vehicles</span>
                 <span class="stat-value" id="totalVehicles">0</span>
@@ -220,7 +378,7 @@
 
         <!-- Lane Breakdown -->
         <div class="card">
-            <h3>🛣️ Lane Statistics</h3>
+            <h3>🛣️ LANE STATISTICS</h3>
             <div class="lanes-grid">
                 <div class="lane-box">
                     <h4>NORTH</h4>
@@ -247,7 +405,7 @@
 
         <!-- Data Collection -->
         <div class="card">
-            <h3>💾 Data Collection</h3>
+            <h3>💾 DATA COLLECTION</h3>
             <div class="stat">
                 <span>Status</span>
                 <span class="stat-value" id="collectStatus">Idle</span>
@@ -264,123 +422,92 @@
         </div>
 
         <!-- Vehicle Count Chart -->
-        <div class="card" style="grid-column: span 2;">
-            <h3>📈 Vehicle Count History</h3>
-            <div class="chart-container">
-                <canvas id="vehicleChart"></canvas>
+        <div class="card grid-wide">
+            <h3>📈 VEHICLE COUNT HISTORY</h3>
+            <div class="chart-legend">
+                <span><span class="legend-dot vehicles"></span> Vehicles</span>
+                <span><span class="legend-dot queue"></span> Queue</span>
+            </div>
+            <div class="chart-area">
+                <div class="chart-bar-container" id="chartBars"></div>
             </div>
         </div>
 
         <!-- Activity Log -->
-        <div class="card">
-            <h3>📋 Activity Log</h3>
+        <div class="card grid-wide">
+            <h3>📋 ACTIVITY LOG</h3>
             <div class="log-container" id="logContainer"></div>
         </div>
     </div>
 
     <script>
-        // Chart setup
-        const ctx = document.getElementById('vehicleChart').getContext('2d');
-        const vehicleChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Vehicles',
-                    data: [],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Queue',
-                    data: [],
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { display: false },
-                    y: { 
-                        beginAtZero: true,
-                        grid: { color: '#334155' },
-                        ticks: { color: '#94a3b8' }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: { color: '#94a3b8' }
-                    }
-                }
-            }
-        });
-
-        // Data update
-        const maxDataPoints = 50;
+        // ========== CHART DATA ==========
+        const maxBars = 60;
+        const vehicleHistory = [];
+        const queueHistory = [];
 
         function updateChart(vehicles, queue) {
-            const now = new Date().toLocaleTimeString();
-            
-            vehicleChart.data.labels.push(now);
-            vehicleChart.data.datasets[0].data.push(vehicles);
-            vehicleChart.data.datasets[1].data.push(queue);
-            
-            if (vehicleChart.data.labels.length > maxDataPoints) {
-                vehicleChart.data.labels.shift();
-                vehicleChart.data.datasets[0].data.shift();
-                vehicleChart.data.datasets[1].data.shift();
+            vehicleHistory.push(vehicles);
+            queueHistory.push(queue);
+            if (vehicleHistory.length > maxBars) {
+                vehicleHistory.shift();
+                queueHistory.shift();
             }
-            
-            vehicleChart.update('none');
+
+            const container = document.getElementById('chartBars');
+            const maxVal = Math.max(30, ...vehicleHistory, ...queueHistory);
+            let html = '';
+            for (let i = 0; i < vehicleHistory.length; i++) {
+                const vH = Math.max(2, (vehicleHistory[i] / maxVal) * 180);
+                html += `<div class="chart-bar" style="height:${vH}px" title="V:${vehicleHistory[i]}"></div>`;
+            }
+            container.innerHTML = html;
         }
 
+        // ========== LOGGING ==========
         function addLog(message) {
             const container = document.getElementById('logContainer');
             const entry = document.createElement('div');
             entry.className = 'log-entry';
-            entry.innerHTML = `
-                <span class="log-time">[${new Date().toLocaleTimeString()}]</span>
-                <span class="log-message">${message}</span>
-            `;
+            const time = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-message">${message}</span>`;
             container.insertBefore(entry, container.firstChild);
-            
-            // Keep only last 50 entries
             while (container.children.length > 50) {
                 container.removeChild(container.lastChild);
             }
         }
 
+        // ========== SIGNAL LIGHTS ==========
         function updateSignalLights(state) {
             document.querySelectorAll('.signal-light').forEach(el => el.classList.remove('active'));
             if (state) {
-                const light = document.getElementById('light' + state.charAt(0).toUpperCase() + state.slice(1));
-                if (light) light.classList.add('active');
+                const id = 'light' + state.charAt(0).toUpperCase() + state.slice(1);
+                const el = document.getElementById(id);
+                if (el) el.classList.add('active');
             }
         }
 
-        // Fetch data periodically
+        // ========== FETCH STATUS (Polling) ==========
         function fetchStatus() {
             fetch('/api/status')
                 .then(res => res.json())
                 .then(data => {
-                    document.getElementById('statusDot').style.background = '#22c55e';
-                    document.getElementById('statusText').textContent = 
+                    document.getElementById('statusDot').classList.add('active');
+                    document.getElementById('statusText').textContent =
                         `Frames: ${data.frame_count} | FPS: ${data.avg_fps}`;
                     document.getElementById('sampleCount').textContent = data.collected_samples;
-                    document.getElementById('collectStatus').textContent = 
+                    document.getElementById('collectStatus').textContent =
                         data.is_collecting ? 'Recording' : 'Idle';
+                    document.getElementById('collectStatus').style.color =
+                        data.is_collecting ? '#22c55e' : '#94a3b8';
                 })
-                .catch(err => {
-                    document.getElementById('statusDot').style.background = '#ef4444';
+                .catch(() => {
+                    document.getElementById('statusDot').classList.remove('active');
                     document.getElementById('statusText').textContent = 'Disconnected';
                 });
         }
 
+        // ========== FETCH LATEST DATA (Polling) ==========
         function fetchLatest() {
             fetch('/api/latest')
                 .then(res => res.json())
@@ -390,35 +517,61 @@
                     // Signal
                     if (data.signal) {
                         const state = data.signal.state;
-                        document.getElementById('currentPhase').textContent = state ? state.toUpperCase() : '-';
-                        document.getElementById('phaseDuration').textContent = 
+                        document.getElementById('currentPhase').textContent =
+                            state ? state.toUpperCase() : '-';
+                        document.getElementById('phaseDuration').textContent =
                             data.signal.duration ? data.signal.duration.toFixed(1) + 's' : '-';
                         updateSignalLights(state);
                     }
 
                     // Vehicles
                     if (data.vehicles) {
-                        document.getElementById('totalVehicles').textContent = data.vehicles.total || 0;
-                        document.getElementById('queueLength').textContent = data.vehicles.queue || 0;
-                        document.getElementById('avgSpeed').textContent = 
-                            (data.vehicles.speed || 0).toFixed(1) + ' m/s';
-                        
-                        updateChart(data.vehicles.total, data.vehicles.queue);
+                        document.getElementById('totalVehicles').textContent =
+                            data.vehicles.total || 0;
+                        document.getElementById('queueLength').textContent =
+                            typeof data.vehicles.queue === 'number'
+                                ? data.vehicles.queue.toFixed ? data.vehicles.queue.toFixed(0) : data.vehicles.queue
+                                : 0;
+                        document.getElementById('avgSpeed').textContent =
+                            data.vehicles.speed ? data.vehicles.speed.toFixed(1) + ' m/s' : '0 m/s';
+
+                        // Lane distribution (simulated split)
+                        const total = data.vehicles.total || 0;
+                        const q = data.vehicles.queue || 0;
+                        const n = Math.round(total * 0.3);
+                        const s = Math.round(total * 0.25);
+                        const e = Math.round(total * 0.25);
+                        const w = total - n - s - e;
+                        document.getElementById('northCount').textContent = n;
+                        document.getElementById('southCount').textContent = s;
+                        document.getElementById('eastCount').textContent = e;
+                        document.getElementById('westCount').textContent = w;
+                        const qn = Math.round(q * 0.3);
+                        const qs = Math.round(q * 0.25);
+                        const qe = Math.round(q * 0.25);
+                        const qw = Math.max(0, q - qn - qs - qe);
+                        document.getElementById('northQueue').textContent = 'Queue: ' + qn;
+                        document.getElementById('southQueue').textContent = 'Queue: ' + qs;
+                        document.getElementById('eastQueue').textContent = 'Queue: ' + qe;
+                        document.getElementById('westQueue').textContent = 'Queue: ' + qw;
+
+                        updateChart(total, q);
                     }
 
                     // Metrics
                     if (data.metrics) {
-                        document.getElementById('processingFps').textContent = 
-                            (data.metrics.processing_fps || 0).toFixed(1);
+                        document.getElementById('processingFps').textContent =
+                            data.metrics.processing_fps ? data.metrics.processing_fps.toFixed(1) : '-';
                     }
-                });
+                })
+                .catch(() => { });
         }
 
-        // API calls
+        // ========== COLLECTION API ==========
         function startCollection() {
             fetch('/api/collect/start', { method: 'POST' })
                 .then(res => res.json())
-                .then(data => addLog('Data collection started'));
+                .then(() => addLog('Data collection started'));
         }
 
         function stopCollection() {
@@ -432,11 +585,12 @@
             addLog('Data exported');
         }
 
-        // Start polling
+        // ========== START POLLING ==========
         setInterval(fetchStatus, 2000);
         setInterval(fetchLatest, 500);
-        
+
         addLog('Dashboard initialized');
     </script>
 </body>
+
 </html>

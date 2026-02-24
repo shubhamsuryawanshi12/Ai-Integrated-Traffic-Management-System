@@ -1,0 +1,35 @@
+# UrbanFlow - Windows-compatible Requirements
+# Install with: pip install -r requirements-windows.txt
+
+# Core Web Framework
+fastapi>=0.109.0
+uvicorn>=0.27.0
+pydantic>=2.0.0
+python-multipart
+python-socketio>=5.10.0
+websockets>=12.0
+
+# Firebase (authentication)
+firebase-admin>=6.0.0
+
+# Data Processing
+numpy
+pandas
+scikit-learn
+
+# AI/ML - CPU-only PyTorch (much smaller download, no CUDA needed)
+torch --extra-index-url https://download.pytorch.org/whl/cpu
+
+# Computer Vision (optional - app works without these via mock mode)
+opencv-python>=4.8.0
+ultralytics>=8.0.0
+pillow>=10.0.0
+imutils>=0.5.4
+
+# Mobile Camera Server
+flask>=3.0.0,<3.1
+flask-cors>=4.0.0
+flask-socketio>=5.3.0
+
+# Async support for Flask-SocketIO (Windows-compatible)
+eventlet>=0.33.0

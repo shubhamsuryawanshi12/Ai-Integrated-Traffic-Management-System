@@ -1,0 +1,30 @@
+# UrbanFlow - Minimal Requirements (Core functionality only)
+# Install this first for basic backend functionality
+# For full AI/CV features, install requirements-full.txt after
+
+# Core Web Framework
+fastapi>=0.109.0
+uvicorn>=0.27.0
+pydantic>=2.0.0
+python-multipart
+python-socketio>=5.10.0
+websockets>=12.0
+
+# Firebase (optional - for authentication)
+firebase-admin>=6.0.0
+
+# Data Processing (core)
+numpy
+pandas
+scikit-learn
+
+# Mobile Camera Server
+flask>=3.0.0
+flask-cors>=4.0.0
+flask-socketio>=5.3.0
+
+# Async support for Flask-SocketIO
+eventlet>=0.33.0
+
+# Image processing (lightweight)
+pillow>=10.0.0

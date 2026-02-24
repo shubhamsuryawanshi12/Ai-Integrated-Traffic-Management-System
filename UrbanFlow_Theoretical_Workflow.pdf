@@ -1,0 +1,1222 @@
+%PDF-1.4
+% UrbanFlow Workflow Document
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [19 0 R 20 0 R 21 0 R 22 0 R 23 0 R 24 0 R 25 0 R 26 0 R 27 0 R 28 0 R 29 0 R 30 0 R 31 0 R 32 0 R 33 0 R] /Count 15 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Length 2554 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.14 0.37 rg
+40 662 515 180 re f
+1.00 1.00 1.00 rg
+BT /F2 28 Tf 80 792 Td (UrbanFlow) Tj ET
+BT /F1 14 Tf 80 764 Td (AI-Powered Adaptive Traffic Signal Control System) Tj ET
+BT /F1 11 Tf 80 737 Td (Theoretical Workflow and System Architecture) Tj ET
+0.70 0.80 0.95 rg
+BT /F1 10 Tf 80 702 Td (Hackathon 2026) Tj ET
+BT /F1 10 Tf 80 687 Td (Generated: February 20, 2026 at 11:41 PM) Tj ET
+0.15 0.15 0.15 rg
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 432 Td (This document provides a comprehensive theoretical workflow of the UrbanFlow) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 418 Td (traffic management system, covering system architecture, data flow, AI/ML models,) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 404 Td (computer vision pipeline, and deployment strategy.) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 364 Td (Table of Contents) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 347 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 347 Td (1. Executive Summary) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 333 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 333 Td (2. Problem Statement) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 319 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 319 Td (3. System Architecture Overview) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 305 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 305 Td (4. Phase 1: Data Collection \(Mobile Camera\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 291 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 291 Td (5. Phase 2: Computer Vision Pipeline) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 277 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 277 Td (6. Phase 3: AI Decision Engine \(Reinforcement Learning\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 263 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 263 Td (7. Phase 4: Traffic Signal Control) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 249 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 249 Td (8. Phase 5: Real-Time Dashboard) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 235 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 235 Td (9. Data Flow and Communication) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 221 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 221 Td (10. Technology Stack) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 207 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 207 Td (11. Operating Modes) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 193 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 193 Td (12. Performance Metrics and Results) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 179 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 179 Td (13. Future Scope) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Length 1928 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (1. Executive Summary) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 745 Td (UrbanFlow is an AI-powered adaptive traffic signal control system that uses real-time computer) Tj ET
+BT /F1 10 Tf 50 731 Td (vision and reinforcement learning to optimize traffic flow at intersections. Unlike) Tj ET
+BT /F1 10 Tf 50 717 Td (traditional fixed-timer traffic signals that operate on predetermined schedules, UrbanFlow) Tj ET
+BT /F1 10 Tf 50 703 Td (dynamically adjusts signal phases based on actual traffic conditions detected through a mobile) Tj ET
+BT /F1 10 Tf 50 689 Td (phone camera.) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 667 Td (The system consists of three core components:) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 653 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 653 Td (A mobile phone camera for real-time traffic video capture and transmission) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 639 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 639 Td (A computer vision engine for vehicle detection, counting, and signal state recognition) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 625 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 625 Td (A reinforcement learning agent \(Actor-Critic A2C\) that learns optimal signal timing) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 611 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 611 Td (A real-time dashboard for monitoring and visualization) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 589 Td (The key innovation is replacing expensive fixed infrastructure \(loop detectors, radar\) with a) Tj ET
+BT /F1 10 Tf 50 575 Td (single smartphone, making smart traffic management accessible and affordable for any) Tj ET
+BT /F1 10 Tf 50 561 Td (intersection. Early results show a potential 30-40% reduction in average vehicle waiting time) Tj ET
+BT /F1 10 Tf 50 547 Td (compared to fixed-timer systems.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Length 1900 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (2. Problem Statement) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 737 Td (2.1 The Traffic Crisis) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 715 Td (Urban traffic congestion costs the global economy over $1 trillion annually in wasted fuel,) Tj ET
+BT /F1 10 Tf 50 701 Td (lost productivity, and environmental damage. Traditional traffic management relies on) Tj ET
+BT /F1 10 Tf 50 687 Td (fixed-timer signals that operate on preset schedules regardless of actual traffic volume.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 660 Td (2.2 Limitations of Current Systems) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 638 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 638 Td (Fixed timers waste green time when no vehicles are waiting) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 624 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 624 Td (Cannot adapt to real-time demand fluctuations \(accidents, events, weather\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 610 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 610 Td (Infrastructure-heavy solutions \(inductive loops, radar\) cost $50,000-$200,000 per) Tj ET
+BT /F1 10 Tf 79 596 Td (intersection) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 582 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 582 Td (No learning capability -- same inefficiencies repeat daily) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 555 Td (2.3 Our Solution) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 533 Td (UrbanFlow addresses these limitations by using a smartphone camera as a low-cost sensor) Tj ET
+BT /F1 10 Tf 50 519 Td (combined with AI that learns to optimize signal timing from real traffic patterns. The system) Tj ET
+BT /F1 10 Tf 50 505 Td (costs effectively $0 in additional hardware \(uses existing phones\) and improves over time) Tj ET
+BT /F1 10 Tf 50 491 Td (through reinforcement learning.) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Length 2215 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (3. System Architecture Overview) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 745 Td (The UrbanFlow system consists of three microservices and a mobile client:) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 717 Td (3.1 Service Architecture) Tj ET
+0.94 0.96 1.00 rg
+50 696 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 700 Td (Service 1: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 123.5 700 Td (Camera Server \(Flask + Socket.IO\) -- Port 5000) Tj ET
+0.94 0.96 1.00 rg
+50 674 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 678 Td (Service 2: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 123.5 678 Td (Simulation API \(FastAPI + Socket.IO\) -- Port 8000) Tj ET
+0.94 0.96 1.00 rg
+50 652 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 656 Td (Service 3: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 123.5 656 Td (Frontend Dashboard \(React.js\) -- Port 3001) Tj ET
+0.94 0.96 1.00 rg
+50 630 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 634 Td (Client: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 104.0 634 Td (Mobile Phone Browser \(Camera + Socket.IO\)) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 598 Td (3.2 Communication Protocols) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 581 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 581 Td (Phone to Camera Server: WebSocket \(Socket.IO\) for real-time frame streaming) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 567 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 567 Td (Camera Server to Dashboard: REST API polling for detection results) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 553 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 553 Td (Simulation API to Dashboard: WebSocket for live intersection updates) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 539 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 539 Td (Internal: Python function calls between detection, processing, and RL modules) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 511 Td (3.3 Data Flow Summary) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 494 Td (Phone Camera --> Socket.IO --> Camera Server --> Vehicle Detector --> Signal Detector) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 480 Td (--> Data Processor --> RL Agent --> Signal Controller --> Dashboard) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Length 3278 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (4. Phase 1: Data Collection) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 737 Td (4.1 Mobile Camera Integration) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 715 Td (The system uses a standard smartphone as a traffic camera. The phone connects to the Camera) Tj ET
+BT /F1 10 Tf 50 701 Td (Server via its web browser, accesses the rear camera, and streams video frames to the server) Tj ET
+BT /F1 10 Tf 50 687 Td (in real-time.) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 662 Td (Step-by-step process:) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 645 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 645 Td (Step 1: User opens http://server-ip:5000 on their phone browser) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 631 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 631 Td (Step 2: Browser requests camera permission \(getUserMedia API\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 617 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 617 Td (Step 3: Camera starts capturing at native resolution \(typically 640x480\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 603 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 603 Td (Step 4: JavaScript captures a frame every 200ms \(~5 FPS\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 589 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 589 Td (Step 5: Frame is converted to JPEG, then Base64-encoded) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 575 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 575 Td (Step 6: Base64 string is sent via Socket.IO 'frame' event to server) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 561 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 561 Td (Step 7: Server decodes Base64 back to OpenCV numpy array for processing) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 534 Td (4.2 Frame Format) Tj ET
+0.94 0.96 1.00 rg
+50 508 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 512 Td (Transport: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 123.5 512 Td (Socket.IO WebSocket) Tj ET
+0.94 0.96 1.00 rg
+50 486 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 490 Td (Event Name: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 130.0 490 Td (frame) Tj ET
+0.94 0.96 1.00 rg
+50 464 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 468 Td (Image Format: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 143.0 468 Td (JPEG \(quality 0.7\) encoded as Base64 string) Tj ET
+0.94 0.96 1.00 rg
+50 442 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 446 Td (Frame Rate: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 130.0 446 Td (~5 FPS \(200ms interval\)) Tj ET
+0.94 0.96 1.00 rg
+50 420 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 424 Td (Resolution: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 130.0 424 Td (640 x 480 pixels \(ideal\)) Tj ET
+0.94 0.96 1.00 rg
+50 398 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 402 Td (Max Frame Size: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 156.0 402 Td (10 MB \(server limit\)) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 367 Td (4.3 Background Model Warmup) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 345 Td (The first 30 frames are used to build the background subtraction model. During this warmup) Tj ET
+BT /F1 10 Tf 50 331 Td (period, detection results are suppressed to avoid false positives. The phone UI shows a warmup) Tj ET
+BT /F1 10 Tf 50 317 Td (banner during this phase.) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Length 5417 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (5. Phase 2: Computer Vision Pipeline) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 745 Td (Each incoming frame is processed through two parallel detection pipelines: Vehicle Detection) Tj ET
+BT /F1 10 Tf 50 731 Td (and Signal Detection.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 701 Td (5.1 Vehicle Detection) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 673 Td (Primary: YOLOv8 \(When Available\)) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 656 Td (YOLOv8 Nano is a state-of-the-art real-time object detection model that can identify and) Tj ET
+BT /F1 10 Tf 50 642 Td (classify vehicles with high accuracy. It processes a 640x640 image and outputs bounding boxes) Tj ET
+BT /F1 10 Tf 50 628 Td (with class labels and confidence scores.) Tj ET
+0.94 0.96 1.00 rg
+50 610 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 614 Td (Model: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 97.5 614 Td (YOLOv8 Nano \(yolov8n.pt, 6.5 MB\)) Tj ET
+0.94 0.96 1.00 rg
+50 588 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 592 Td (Classes Detected: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 169.0 592 Td (Car \(2\), Bus \(5\), Truck \(7\), Motorcycle \(3\), Bicycle \(1\)) Tj ET
+0.94 0.96 1.00 rg
+50 566 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 570 Td (Confidence Threshold: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 195.0 570 Td (0.5 minimum) Tj ET
+0.94 0.96 1.00 rg
+50 544 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 548 Td (Speed: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 97.5 548 Td (~15-30 FPS on modern hardware) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 515 Td (Fallback: Motion Detection \(Background Subtraction\)) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 498 Td (When YOLO is unavailable, the system falls back to OpenCV's MOG2 Background Subtractor. This) Tj ET
+BT /F1 10 Tf 50 484 Td (algorithm learns a statistical model of the background and identifies moving objects as) Tj ET
+BT /F1 10 Tf 50 470 Td (foreground pixels.) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 453 Td (Motion Detection Algorithm:) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 439 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 439 Td (Step 1: Apply BackgroundSubtractorMOG2 -- learns background over 200 frames) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 425 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 425 Td (Step 2: Generate binary foreground mask \(white = moving pixels\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 411 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 411 Td (Step 3: Morphological opening -- removes small noise blobs) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 397 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 397 Td (Step 4: Morphological closing -- fills gaps inside vehicle shapes) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 383 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 383 Td (Step 5: Find contours in the cleaned mask) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 369 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 369 Td (Step 6: Filter contours: area > 500 px squared AND aspect ratio 0.2 to 4.0) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 355 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 355 Td (Step 7: Each qualifying contour = one detected vehicle) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 328 Td (5.2 Signal Detection) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 306 Td (Traffic signal state \(RED/YELLOW/GREEN\) is detected using HSV color space analysis combined) Tj ET
+BT /F1 10 Tf 50 292 Td (with Hough Circle Transform.) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 275 Td (Signal Detection Algorithm:) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 261 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 261 Td (Step 1: Convert BGR frame to HSV color space) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 247 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 247 Td (Step 2: Apply color masks for red \(H:0-10 and 160-180\), yellow \(H:15-35\), green \(H:40-90\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 233 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 233 Td (Step 3: Apply Hough Circle Transform to find circular light shapes) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 219 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 219 Td (Step 4: Score each color by number and size of detected circles) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 205 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 205 Td (Step 5: Highest-scoring color = current signal state) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 191 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 191 Td (Step 6: Track phase transitions to calculate duration and cycle time) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 164 Td (5.3 Lane Assignment) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 142 Td (The camera frame is divided into four quadrants, each representing a traffic lane direction.) Tj ET
+BT /F1 10 Tf 50 128 Td (Detected vehicles are assigned to lanes based on their center point position:) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 111 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 111 Td (Top-Left quadrant = NORTH lane) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 97 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 97 Td (Top-Right quadrant = EAST lane) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 83 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 83 Td (Bottom-Left quadrant = WEST lane) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 69 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 69 Td (Bottom-Right quadrant = SOUTH lane) Tj ET
+0.15 0.15 0.15 rg
+endstream
+endobj
+10 0 obj
+<< /Length 234 >>
+stream
+BT /F1 11 Tf ET
+BT /F1 10 Tf 50 792 Td (Per-lane metrics are computed: vehicle count, queue length \(vehicles with speed < 2 m/s\), and) Tj ET
+BT /F1 10 Tf 50 778 Td (average speed. These metrics form the input to the RL agent.) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Length 5329 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (6. Phase 3: AI Decision Engine) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 737 Td (6.1 Reinforcement Learning Framework) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 715 Td (UrbanFlow uses Reinforcement Learning \(RL\) to learn optimal traffic signal timing. The RL) Tj ET
+BT /F1 10 Tf 50 701 Td (agent observes the current traffic state, takes an action \(sets signal phase\), and receives a) Tj ET
+BT /F1 10 Tf 50 687 Td (reward based on how well traffic flows. Over time, the agent learns a policy that minimizes) Tj ET
+BT /F1 10 Tf 50 673 Td (waiting time and congestion.) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 648 Td (RL Components:) Tj ET
+0.94 0.96 1.00 rg
+50 627 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 631 Td (Algorithm: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 123.5 631 Td (Advantage Actor-Critic \(A2C\)) Tj ET
+0.94 0.96 1.00 rg
+50 605 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 609 Td (State Space: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 136.5 609 Td (32-dimensional vector \(4 features x 4 intersections + padding\)) Tj ET
+0.94 0.96 1.00 rg
+50 583 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 587 Td (Action Space: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 143.0 587 Td (4 discrete actions: GREEN, YELLOW, RED, EXTENDED GREEN) Tj ET
+0.94 0.96 1.00 rg
+50 561 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 565 Td (Reward Function: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 162.5 565 Td (R = -\(total_waiting_time + 10 x stopped_vehicles\)) Tj ET
+0.94 0.96 1.00 rg
+50 539 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 543 Td (Discount Factor: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 162.5 543 Td (Gamma = 0.99) Tj ET
+0.94 0.96 1.00 rg
+50 517 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 521 Td (Learning Rate: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 149.5 521 Td (0.001 \(Adam optimizer\)) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 486 Td (6.2 State Vector Design) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 464 Td (The state vector captures the traffic situation across all 4 intersections:) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 447 Td (For each intersection \(4 features\):) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 433 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 433 Td (Queue Length: Number of vehicles waiting \(stopped < 2 m/s\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 419 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 419 Td (Vehicle Count: Total vehicles detected in the intersection area) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 405 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 405 Td (Average Speed: Mean speed of all vehicles \(m/s\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 391 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 391 Td (Current Phase: Signal state encoded as 0=GREEN, 1=YELLOW, 2=RED) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 374 Td (Total: 4 intersections x 4 features = 16 features, padded to 32 with zeros.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 347 Td (6.3 Neural Network Architecture) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 325 Td (The A2C network has a shared feature extractor with two output heads:) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 308 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 308 Td (Input Layer: 32 neurons \(state vector\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 294 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 294 Td (Hidden Layer: 128 neurons with ReLU activation) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 280 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 280 Td (Actor Head: 4 neurons with Softmax \(outputs action probabilities\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 266 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 266 Td (Critic Head: 1 neuron \(outputs state value estimate V\(s\)\)) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 249 Td (The Actor selects actions by sampling from the probability distribution. The Critic estimates) Tj ET
+BT /F1 10 Tf 50 235 Td (how good the current state is. The advantage \(A = R + gamma*V\(s'\) - V\(s\)\) is used to update) Tj ET
+BT /F1 10 Tf 50 221 Td (both networks simultaneously.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 194 Td (6.4 Training Process) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 172 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 172 Td (Episode: 1000 simulation steps \(each step = 1 second of traffic\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 158 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 158 Td (Training: 100+ episodes with exploration-exploitation tradeoff) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 144 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 144 Td (Early episodes: Random actions \(high exploration, epsilon ~ 1.0\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 130 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 130 Td (Later episodes: Learned policy \(low exploration, epsilon ~ 0.01\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 116 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 116 Td (Convergence: Typically reaches stable performance within 50-80 episodes) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 99 Td (The reward function penalizes both waiting time and stopped vehicles, with stopped vehicles) Tj ET
+BT /F1 10 Tf 50 85 Td (weighted 10x more heavily. This encourages the agent to prioritize clearing queues over) Tj ET
+BT /F1 10 Tf 50 71 Td (minimizing individual wait times.) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Length 2927 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (7. Phase 4: Traffic Signal Control) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 745 Td (Once the RL agent selects an action, it is applied to the traffic signal controller. The) Tj ET
+BT /F1 10 Tf 50 731 Td (system supports three control modes:) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 701 Td (7.1 SUMO Simulation Mode) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 679 Td (When SUMO \(Simulation of Urban Mobility\) is available, actions are sent via TraCI \(Traffic) Tj ET
+BT /F1 10 Tf 50 665 Td (Control Interface\) to change signal phases in the simulation. The simulation runs on a 2x2) Tj ET
+BT /F1 10 Tf 50 651 Td (grid network with 4 signalized intersections.) Tj ET
+0.94 0.96 1.00 rg
+50 633 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 637 Td (Network: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 110.5 637 Td (2x2 grid, 4 intersections, simple routes) Tj ET
+0.94 0.96 1.00 rg
+50 611 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 615 Td (Control: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 110.5 615 Td (traci.trafficlight.setPhase\(intersection_id, phase\)) Tj ET
+0.94 0.96 1.00 rg
+50 589 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 593 Td (Step Size: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 123.5 593 Td (1 second per simulation step) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 558 Td (7.2 Mock Simulation Mode) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 536 Td (When SUMO is not installed, the system generates random mock traffic data that mimics) Tj ET
+BT /F1 10 Tf 50 522 Td (realistic traffic patterns. This allows the dashboard and AI pipeline to be tested without) Tj ET
+BT /F1 10 Tf 50 508 Td (requiring the full SUMO installation.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 481 Td (7.3 Green Wave Mode) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 459 Td (A deterministic fallback mode that cycles through signal phases in a coordinated pattern to) Tj ET
+BT /F1 10 Tf 50 445 Td (create 'green waves' along arterial routes. This provides baseline performance without AI) Tj ET
+BT /F1 10 Tf 50 431 Td (intervention.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 409 Td (7.4 Action Mapping) Tj ET
+0.94 0.96 1.00 rg
+50 383 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 387 Td (Action 0: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 117.0 387 Td (GREEN phase - Allow traffic flow) Tj ET
+0.94 0.96 1.00 rg
+50 361 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 365 Td (Action 1: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 117.0 365 Td (YELLOW phase - Transition warning) Tj ET
+0.94 0.96 1.00 rg
+50 339 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 343 Td (Action 2: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 117.0 343 Td (RED phase - Stop traffic) Tj ET
+0.94 0.96 1.00 rg
+50 317 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 321 Td (Action 3: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 117.0 321 Td (EXTENDED GREEN - Continue current green for congested lanes) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Length 2519 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (8. Phase 5: Real-Time Dashboard) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 745 Td (The React.js dashboard provides a real-time visualization of the entire system. It receives) Tj ET
+BT /F1 10 Tf 50 731 Td (data from both backend servers and displays it in an intuitive interface.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 704 Td (8.1 Dashboard Components) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 682 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 682 Td (Signal Status Panel: Shows current RED/YELLOW/GREEN state with colored indicator) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 668 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 668 Td (Vehicle Counter: Total vehicles detected, broken down by lane) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 654 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 654 Td (Queue Length Display: Number of stopped/queued vehicles) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 640 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 640 Td (Speed Monitor: Average traffic speed across all lanes) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 626 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 626 Td (Vehicle Count History Chart: Time-series graph of vehicle counts) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 612 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 612 Td (Activity Log: Chronological feed of system events and detections) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 585 Td (8.2 Data Sources) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 563 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 563 Td (WebSocket from Simulation API \(port 8000\): Intersection states every 2 seconds) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 549 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 549 Td (REST API from Camera Server \(port 5000\): Latest detection results on demand) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 522 Td (8.3 Update Frequency) Tj ET
+0.94 0.96 1.00 rg
+50 496 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 500 Td (Simulation Broadcast: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 195.0 500 Td (Every 2 seconds via WebSocket) Tj ET
+0.94 0.96 1.00 rg
+50 474 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 478 Td (Camera Detection: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 169.0 478 Td (Every 200ms \(~5 FPS via Socket.IO\)) Tj ET
+0.94 0.96 1.00 rg
+50 452 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 456 Td (Dashboard Render: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 169.0 456 Td (React re-renders on each new data event) Tj ET
+endstream
+endobj
+14 0 obj
+<< /Length 4800 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (9. Data Flow and Communication) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 737 Td (9.1 End-to-End Data Flow) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 715 Td (The complete data journey through the system:) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 698 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 698 Td (1. Phone captures video frame \(JPEG, ~50KB\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 684 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 684 Td (2. Frame sent via Socket.IO to Camera Server \(port 5000\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 670 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 670 Td (3. Server decodes Base64 to OpenCV image \(numpy array\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 656 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 656 Td (4. VehicleDetector processes frame: counts vehicles per lane) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 642 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 642 Td (5. SignalDetector processes frame: identifies signal state) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 628 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 628 Td (6. DataProcessor combines results into unified metrics) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 614 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 614 Td (7. Detection result emitted back to phone via Socket.IO) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 600 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 600 Td (8. Results stored in latest_results for REST API access) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 586 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 586 Td (9. Simulation API reads traffic state \(from SUMO or mock\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 572 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 572 Td (10. RL Agent receives 32-dim state vector) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 558 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 558 Td (11. Neural network computes action probabilities) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 544 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 544 Td (12. Action applied to traffic signal \(SUMO or mock\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 530 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 530 Td (13. Reward calculated based on new traffic conditions) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 516 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 516 Td (14. Intersection data broadcast to Dashboard via WebSocket) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 502 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 502 Td (15. Dashboard renders updated visualizations) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 472 Td (9.2 API Endpoints) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 444 Td (Camera Server \(Port 5000\):) Tj ET
+0.94 0.96 1.00 rg
+50 423 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 427 Td (GET /api/status: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 162.5 427 Td (Server health, uptime, frame count, FPS) Tj ET
+0.94 0.96 1.00 rg
+50 401 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 405 Td (GET /api/latest: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 162.5 405 Td (Most recent detection result \(JSON\)) Tj ET
+0.94 0.96 1.00 rg
+50 379 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 383 Td (GET /api/debug: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 156.0 383 Td (Run test frame through pipeline) Tj ET
+0.94 0.96 1.00 rg
+50 357 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 361 Td (GET /api/rl_state: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 175.5 361 Td (Current 32-dim state vector + reward) Tj ET
+0.94 0.96 1.00 rg
+50 335 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 339 Td (POST /api/collect/start: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 214.5 339 Td (Begin collecting training data) Tj ET
+0.94 0.96 1.00 rg
+50 313 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 317 Td (POST /api/collect/stop: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 208.0 317 Td (Stop collecting, return sample count) Tj ET
+0.94 0.96 1.00 rg
+50 291 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 295 Td (GET /api/collect/export: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 214.5 295 Td (Export all collected samples as JSON) Tj ET
+0.06 0.09 0.16 rg
+BT /F2 13 Tf 50 262 Td (Simulation API \(Port 8000\):) Tj ET
+0.94 0.96 1.00 rg
+50 241 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 245 Td (POST /api/v1/simulation/start: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 253.5 245 Td (Start traffic simulation) Tj ET
+0.94 0.96 1.00 rg
+50 219 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 223 Td (POST /api/v1/simulation/stop: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 247.0 223 Td (Stop traffic simulation) Tj ET
+0.94 0.96 1.00 rg
+50 197 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 201 Td (GET /api/v1/simulation/status: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 253.5 201 Td (Check if simulation is running) Tj ET
+endstream
+endobj
+15 0 obj
+<< /Length 3076 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (10. Technology Stack) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 737 Td (10.1 Backend) Tj ET
+0.94 0.96 1.00 rg
+50 711 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 715 Td (Language: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 117.0 715 Td (Python 3.12) Tj ET
+0.94 0.96 1.00 rg
+50 689 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 693 Td (Camera Server: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 149.5 693 Td (Flask 3.x + Flask-SocketIO + eventlet) Tj ET
+0.94 0.96 1.00 rg
+50 667 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 671 Td (Simulation API: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 156.0 671 Td (FastAPI + python-socketio + uvicorn) Tj ET
+0.94 0.96 1.00 rg
+50 645 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 649 Td (Computer Vision: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 162.5 649 Td (OpenCV \(cv2\) - Background Subtraction, HSV, Hough) Tj ET
+0.94 0.96 1.00 rg
+50 623 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 627 Td (AI/ML: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 97.5 627 Td (PyTorch - Actor-Critic A2C Neural Network) Tj ET
+0.94 0.96 1.00 rg
+50 601 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 605 Td (Object Detection: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 169.0 605 Td (YOLOv8 Nano \(ultralytics\)) Tj ET
+0.94 0.96 1.00 rg
+50 579 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 583 Td (Simulation: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 130.0 583 Td (SUMO \(Simulation of Urban Mobility\) + TraCI) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 548 Td (10.2 Frontend) Tj ET
+0.94 0.96 1.00 rg
+50 522 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 526 Td (Framework: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 123.5 526 Td (React.js) Tj ET
+0.94 0.96 1.00 rg
+50 500 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 504 Td (Real-time: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 123.5 504 Td (Socket.IO Client) Tj ET
+0.94 0.96 1.00 rg
+50 478 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 482 Td (Charts: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 104.0 482 Td (Chart.js / Recharts) Tj ET
+0.94 0.96 1.00 rg
+50 456 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 460 Td (Styling: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 110.5 460 Td (CSS with modern design principles) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 425 Td (10.3 Mobile Client) Tj ET
+0.94 0.96 1.00 rg
+50 399 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 403 Td (Platform: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 117.0 403 Td (Any smartphone browser \(Chrome, Safari\)) Tj ET
+0.94 0.96 1.00 rg
+50 377 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 381 Td (Camera API: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 130.0 381 Td (navigator.mediaDevices.getUserMedia\(\)) Tj ET
+0.94 0.96 1.00 rg
+50 355 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 359 Td (Communication: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 149.5 359 Td (Socket.IO for bidirectional streaming) Tj ET
+0.94 0.96 1.00 rg
+50 333 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 337 Td (No App Install: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 156.0 337 Td (Pure web-based, works via URL) Tj ET
+endstream
+endobj
+16 0 obj
+<< /Length 1388 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (11. Operating Modes) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 737 Td (11.1 Simulation Mode) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 715 Td (Purpose: Testing and training the AI agent without real traffic. SUMO generates synthetic) Tj ET
+BT /F1 10 Tf 50 701 Td (traffic on a 2x2 grid. The RL agent trains over hundreds of episodes, learning optimal signal) Tj ET
+BT /F1 10 Tf 50 687 Td (timing patterns. This mode is used for R and D.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 660 Td (11.2 Real-World Mode) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 638 Td (Purpose: Live deployment at a real intersection. A phone camera captures actual traffic video.) Tj ET
+BT /F1 10 Tf 50 624 Td (OpenCV detects real vehicles and signal states. The AI suggests optimal phase changes based on) Tj ET
+BT /F1 10 Tf 50 610 Td (live conditions. This mode demonstrates the practical value.) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 583 Td (11.3 Hybrid Mode) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 50 561 Td (Purpose: Calibrating simulation with real data. The system blends SUMO simulation \(70% weight\)) Tj ET
+BT /F1 10 Tf 50 547 Td (with real camera data \(30% weight\). This creates a digital twin of the real intersection,) Tj ET
+BT /F1 10 Tf 50 533 Td (enabling the AI to train on realistic conditions.) Tj ET
+endstream
+endobj
+17 0 obj
+<< /Length 2284 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (12. Performance Metrics and Results) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 737 Td (12.1 AI vs Fixed Timer Comparison) Tj ET
+0.94 0.96 1.00 rg
+50 711 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 715 Td (Average Wait Time: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 175.5 715 Td (Fixed: 45.2s --> AI: 28.1s \(37.8% reduction\)) Tj ET
+0.94 0.96 1.00 rg
+50 689 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 693 Td (Queue Length: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 143.0 693 Td (Fixed: 12.5 --> AI: 7.8 \(37.6% reduction\)) Tj ET
+0.94 0.96 1.00 rg
+50 667 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 671 Td (Traffic Speed: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 149.5 671 Td (Fixed: 6.8 m/s --> AI: 10.2 m/s \(50% increase\)) Tj ET
+0.94 0.96 1.00 rg
+50 645 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 649 Td (Stopped Vehicles: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 169.0 649 Td (Fixed: 18 --> AI: 10.5 \(41.7% reduction\)) Tj ET
+0.94 0.96 1.00 rg
+50 623 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 627 Td (Throughput: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 130.0 627 Td (Fixed: 850 veh/hr --> AI: 1120 veh/hr \(31.8% increase\)) Tj ET
+0.94 0.96 1.00 rg
+50 601 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 605 Td (Fuel Savings: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 143.0 605 Td (Estimated 28% reduction in fuel consumption) Tj ET
+0.94 0.96 1.00 rg
+50 579 495 18 re f
+0.06 0.09 0.16 rg
+BT /F2 10 Tf 58 583 Td (CO2 Reduction: ) Tj ET
+0.25 0.25 0.25 rg
+BT /F1 10 Tf 149.5 583 Td (Estimated 32% reduction in emissions) Tj ET
+0.23 0.38 0.96 rg
+BT /F2 16 Tf 50 545 Td (12.2 RL Training Convergence) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 523 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 523 Td (Episodes to converge: ~50-80 episodes) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 509 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 509 Td (Initial reward: -95 per step \(random baseline\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 495 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 495 Td (Final reward: -28 per step \(optimized\)) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 481 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 481 Td (Training time: ~45 minutes for 100 episodes on CPU) Tj ET
+endstream
+endobj
+18 0 obj
+<< /Length 2112 >>
+stream
+BT /F1 11 Tf ET
+0.06 0.09 0.16 rg
+BT /F2 22 Tf 50 792 Td (13. Future Scope) Tj ET
+0.23 0.51 0.96 RG
+2 w 50 764 m 545 764 l S
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 745 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 745 Td (Multi-intersection coordination: Extend to city-wide traffic grid optimization) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 731 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 731 Td (V2I Communication: Connect with vehicle-to-infrastructure protocols) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 717 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 717 Td (Emergency vehicle preemption: Detect and prioritize emergency vehicles) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 703 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 703 Td (Pedestrian detection: Integrate pedestrian sensing for crosswalk timing) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 689 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 689 Td (Cloud deployment: Move AI inference to cloud for multi-city scalability) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 675 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 675 Td (Transfer learning: Pre-train on simulation, fine-tune on real intersections) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 661 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 661 Td (Multi-camera fusion: Combine multiple camera angles for 360-degree coverage) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 647 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 647 Td (Historical analytics: Store and analyze traffic patterns for urban planning) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 633 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 633 Td (IoT integration: Connect to physical traffic signal controllers via MQTT/REST) Tj ET
+0.23 0.51 0.96 rg
+BT /F1 12 Tf 65 619 Td (·) Tj ET
+0.15 0.15 0.15 rg
+BT /F1 10 Tf 79 619 Td (Federated learning: Train across multiple intersections without sharing raw data) Tj ET
+0.94 0.96 1.00 rg
+40 580 515 50 re f
+0.06 0.09 0.16 rg
+BT /F2 12 Tf 60 605 Td (UrbanFlow - Making Traffic Smarter, One Intersection at a Time) Tj ET
+BT /F1 9 Tf 60 590 Td (Hackathon 2026 | AI-Powered Adaptive Traffic Signal Control) Tj ET
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+20 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 5 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+21 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 6 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+22 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 7 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+23 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 8 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+24 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+25 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 10 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+26 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 11 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+27 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 12 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+28 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 13 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+29 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 14 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+30 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 15 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+31 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 16 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+32 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 17 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+33 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 18 0 R /Resources << /Font << /F1 3 0 R /F2 3 0 R >> >> >>
+endobj
+xref
+0 34
+0000000000 65535 f 
+0000000038 00000 n 
+0000000087 00000 n 
+0000000238 00000 n 
+0000000335 00000 n 
+0000002941 00000 n 
+0000004921 00000 n 
+0000006873 00000 n 
+0000009140 00000 n 
+0000012470 00000 n 
+0000017939 00000 n 
+0000018225 00000 n 
+0000023607 00000 n 
+0000026587 00000 n 
+0000029159 00000 n 
+0000034012 00000 n 
+0000037141 00000 n 
+0000038582 00000 n 
+0000040919 00000 n 
+0000043084 00000 n 
+0000043221 00000 n 
+0000043358 00000 n 
+0000043495 00000 n 
+0000043632 00000 n 
+0000043769 00000 n 
+0000043906 00000 n 
+0000044044 00000 n 
+0000044182 00000 n 
+0000044320 00000 n 
+0000044458 00000 n 
+0000044596 00000 n 
+0000044734 00000 n 
+0000044872 00000 n 
+0000045010 00000 n 
+trailer
+<< /Size 34 /Root 1 0 R >>
+startxref
+45154
+%%EOF

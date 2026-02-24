@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCU-MARL++ Traffic Control Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <h1>🚦 PCU-MARL++ Traffic Control Dashboard</h1>
+            <div class="status-controls">
+                <div class="status-item">
+                    <span class="label">Step:</span>
+                    <span id="step-count" class="value">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">Episode:</span>
+                    <span id="episode-count" class="value">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">Rain:</span>
+                    <div class="rain-gauge">
+                        <div id="rain-bar" class="rain-bar"></div>
+                    </div>
+                    <span id="rain-value" class="value">0.0</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">CATC Policy:</span>
+                    <span id="catc-policy" class="badge">clear</span>
+                </div>
+                <button id="start-btn" class="btn btn-start">Start</button>
+                <button id="stop-btn" class="btn btn-stop" disabled>Stop</button>
+                <button id="reset-btn" class="btn btn-reset">Reset</button>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <main class="main-grid">
+            <!-- Grid Map Panel -->
+            <section class="panel grid-map-panel">
+                <h2>Junction Network (3×4 Grid)</h2>
+                <div class="grid-map" id="grid-map">
+                    <!-- Junctions rendered by JS -->
+                </div>
+            </section>
+
+            <!-- Metrics Panel -->
+            <section class="panel metrics-panel">
+                <h2>System Metrics</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Avg Delay (PCU·s)</div>
+                        <div id="avg-delay" class="metric-value">0.0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Throughput (PCU)</div>
+                        <div id="throughput" class="metric-value">0.0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Overflow Rate</div>
+                        <div id="overflow-rate" class="metric-value">0.0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total PCU</div>
+                        <div id="total-pcu" class="metric-value">0.0</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rewards Chart -->
+            <section class="panel rewards-panel">
+                <h2>Reward Curves</h2>
+                <canvas id="rewards-chart"></canvas>
+            </section>
+
+            <!-- Module Status Panel -->
+            <section class="panel modules-panel">
+                <h2>Module Status</h2>
+                <div class="module-cards">
+                    <div class="module-card">
+                        <div class="module-header">PCU-MARL</div>
+                        <div class="module-content">
+                            <div class="module-stat">
+                                <span>Reward:</span>
+                                <span id="pcu-reward">0.0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header">IDSS (Communication)</div>
+                        <div class="module-content">
+                            <div class="module-stat">
+                                <span>Intent Norm:</span>
+                                <span id="idss-norm">0.0</span>
+                            </div>
+                            <div class="module-stat">
+                                <span>Active Neighbors:</span>
+                                <span id="idss-neighbors">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header">CATC (Climate)</div>
+                        <div class="module-content">
+                            <div class="module-stat">
+                                <span>w_clear:</span>
+                                <span id="catc-w1">1.0</span>
+                            </div>
+                            <div class="module-stat">
+                                <span>w_moderate:</span>
+                                <span id="catc-w2">0.0</span>
+                            </div>
+                            <div class="module-stat">
+                                <span>w_heavy:</span>
+                                <span id="catc-w3">0.0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header">LAUER (Events)</div>
+                        <div class="module-content">
+                            <div class="module-stat">
+                                <span>Status:</span>
+                                <span id="lauer-status">No events</span>
+                            </div>
+                            <div class="module-stat">
+                                <span>Event:</span>
+                                <span id="lauer-event">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Junction Details Panel -->
+            <section class="panel junction-panel">
+                <h2>Junction Details</h2>
+                <div id="junction-details" class="junction-details">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

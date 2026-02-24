@@ -198,12 +198,42 @@ const TrafficMap = ({ intersections: propIntersections, style }) => {
     // Use provided intersections if available
     useEffect(() => {
         if (propIntersections && propIntersections.length > 0) {
-            setIntersections(propIntersections);
-        }
-    }, [propIntersections]);
+            // Transform backend data (x, y meters) to LatLng relative to center
+            const mappedIntersections = propIntersections.map(int => {
+                // If already has position (legacy mock), use it
+                if (int.position) return int;
 
-    // Simulate traffic light changes
+                // Backend data has location: {x, y}
+                const x = int.location?.x || 0;
+                const y = int.location?.y || 0;
+
+                // Convert meters to degrees (approx)
+                // 1 deg lat ~ 111km
+                const latOffset = y / 111000;
+                const lngOffset = x / (111000 * Math.cos(center[0] * Math.PI / 180));
+
+                return {
+                    ...int,
+                    position: [center[0] + latOffset, center[1] + lngOffset],
+                    status: int.current_status?.phase?.includes('green') ? 'green' :
+                        int.current_status?.phase?.includes('yellow') ? 'yellow' : 'red',
+                    queueLength: int.traffic_data?.average_wait_time ? Math.round(int.traffic_data.average_wait_time) : 0,
+                    throughput: int.traffic_data?.vehicle_count || 0,
+                    name: int.name || int.id
+                };
+            });
+            setIntersections(mappedIntersections);
+            setLocationName(prev => prev.includes('(Simulation)') ? prev : prev + ' (Simulation Active)');
+        } else {
+            // Fallback to generated if no props
+            // setIntersections(generateIntersectionsAroundLocation(center[0], center[1]));
+        }
+    }, [propIntersections, center]);
+
+    // Simulate traffic light changes ONLY if no props provided
     useEffect(() => {
+        if (propIntersections && propIntersections.length > 0) return;
+
         const interval = setInterval(() => {
             setIntersections(prevIntersections =>
                 prevIntersections.map(intersection => ({
@@ -216,7 +246,7 @@ const TrafficMap = ({ intersections: propIntersections, style }) => {
         }, 3000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [propIntersections]);
 
     const getColorForStatus = (status) => {
         switch (status) {

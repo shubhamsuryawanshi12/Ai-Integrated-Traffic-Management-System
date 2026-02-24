@@ -1,6 +1,15 @@
+# Fix encoding for Windows console
+import sys
+import io
+if sys.platform == 'win32' and sys.stdout.encoding != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import traffic, simulation
+from app.api.routes import ml_model
+from app.api.routes import chatbot
 from app.core.socket_manager import sio
 import socketio
 import asyncio
@@ -18,6 +27,8 @@ fastapi_app.add_middleware(
 
 fastapi_app.include_router(traffic.router, prefix="/api/v1/traffic", tags=["traffic"])
 fastapi_app.include_router(simulation.router, prefix="/api/v1/simulation", tags=["simulation"])
+fastapi_app.include_router(ml_model.router, prefix="/api/v1/ml", tags=["ml"])
+fastapi_app.include_router(chatbot.router, prefix="/api/v1/chatbot", tags=["chatbot"])
 
 @fastapi_app.get("/")
 async def root():

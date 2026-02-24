@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-import numpy as np
+import random
 from typing import Dict, List, Tuple
 
 # Try to import traci for SUMO simulation
@@ -47,11 +47,16 @@ class SumoEnvironment:
             print("Starting simulation in MOCK MODE")
             self.is_running = True
             # Mock Intersection IDs
-            self.ts_ids = ["gneJ0", "gneJ1", "gneJ2", "gneJ3"]
+            self.ts_ids = ["INT_1", "INT_2", "INT_3", "INT_4"]
             self.lanes = ["lane_1", "lane_2"]
             return
 
         try:
+            # Check if there's an existing SUMO connection
+            try:
+                traci.close()
+            except:
+                pass
             traci.start(self.sumo_cmd)
             self.is_running = True
             self.ts_ids = traci.trafficlight.getIDList()
@@ -63,22 +68,21 @@ class SumoEnvironment:
             print(f"Failed to start SUMO, switching to MOCK MODE: {e}")
             self.mock_mode = True
             self.is_running = True
-            self.ts_ids = ["gneJ0", "gneJ1", "gneJ2", "gneJ3"]
+            self.ts_ids = ["INT_1", "INT_2", "INT_3", "INT_4"]
 
-    def step(self):
+    def step(self, action=None):
         """Advance simulation by one step"""
         if not self.is_running:
             return
         
         if self.mock_mode:
             # Simulate processing time
-            import time
             time.sleep(0.1)
             return
 
         traci.simulationStep()
 
-    def get_state(self) -> Dict[str, np.ndarray]:
+    def get_state(self) -> Dict[str, List[float]]:
         """
         Get the current state of the environment.
         """
@@ -87,12 +91,13 @@ class SumoEnvironment:
         if self.mock_mode:
             for ts_id in self.ts_ids:
                 # Generate random realistic looking traffic data
-                queue_length = np.random.uniform(0, 20)
-                num_vehicles = np.random.uniform(5, 50)
-                avg_speed = np.random.uniform(5, 15)
-                phase = int(np.random.choice([0, 1, 2])) # 0: Green, 1: Yellow, 2: Red
+                queue_length = random.uniform(0, 20)
+                num_vehicles = random.uniform(5, 50)
+                avg_speed = random.uniform(5, 15)
+                phase = int(random.choice([0, 1, 2])) # 0: Green, 1: Yellow, 2: Red
                 
-                state_vec = np.array([queue_length, num_vehicles, avg_speed, phase], dtype=np.float32)
+                # State vector as list
+                state_vec = [float(queue_length), float(num_vehicles), float(avg_speed), float(phase)]
                 states[ts_id] = state_vec
             return states
 
@@ -112,11 +117,11 @@ class SumoEnvironment:
                     avg_speed /= len(lanes)
 
                 phase = traci.trafficlight.getPhase(ts_id)
-                state_vec = np.array([queue_length, num_vehicles, avg_speed, phase], dtype=np.float32)
+                state_vec = [float(queue_length), float(num_vehicles), float(avg_speed), float(phase)]
                 states[ts_id] = state_vec
             except Exception:
                 # Fallback if traci fails during query
-                states[ts_id] = np.array([0, 0, 0, 0], dtype=np.float32)
+                states[ts_id] = [0.0, 0.0, 0.0, 0.0]
             
         return states
 
@@ -131,7 +136,7 @@ class SumoEnvironment:
 
     def get_reward(self) -> float:
         if self.mock_mode:
-            return np.random.uniform(-100, -10)
+            return random.uniform(-100, -10)
 
         total_waiting_time = 0
         total_stopped = 0

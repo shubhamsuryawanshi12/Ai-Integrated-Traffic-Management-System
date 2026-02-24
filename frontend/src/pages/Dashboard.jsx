@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TrafficMap from '../components/Dashboard/TrafficMap';
 import TrafficCharts from '../components/Analytics/TrafficCharts';
 import ExplainabilityPanel from '../components/Dashboard/ExplainabilityPanel';
 import CameraFeed from '../components/Dashboard/CameraFeed';
+import Chatbot from '../components/Dashboard/Chatbot';
 import { TrafficProvider, useTraffic } from '../context/TrafficContext';
+import { useThemeContext } from '../context/ThemeContext';
 
 // Import Leaflet CSS (REQUIRED!)
 import 'leaflet/dist/leaflet.css';
 
 function DashboardContent() {
+    const navigate = useNavigate();
     const [simulationRunning, setSimulationRunning] = useState(false);
-    const { intersections, isConnected } = useTraffic();
+    const { intersections, isConnected, systemData } = useTraffic();
+    const { mode, toggleTheme } = useThemeContext();
+
+    // Get theme-aware colors
+    const bgColor = mode === 'bw' ? '#000000' : (mode === 'dark' ? '#0f172a' : '#f8fafc');
+    const cardBgColor = mode === 'bw' ? '#111111' : (mode === 'dark' ? '#1e293b' : '#ffffff');
+    const borderColor = mode === 'bw' ? '#333333' : (mode === 'dark' ? '#334155' : '#e2e8f0');
+    const textPrimary = mode === 'bw' ? '#ffffff' : (mode === 'dark' ? '#ffffff' : '#1e293b');
+    const textSecondary = mode === 'bw' ? '#aaaaaa' : (mode === 'dark' ? '#94a3b8' : '#64748b');
+    const accentColor = mode === 'bw' ? '#ffffff' : '#3b82f6';
 
     const toggleSimulation = async () => {
         try {
@@ -20,6 +33,25 @@ function DashboardContent() {
         } catch (error) {
             console.error('Failed to toggle simulation:', error);
         }
+    };
+
+    const triggerEmergency = async () => {
+        try {
+            await fetch(`http://localhost:8000/api/v1/simulation/emergency?active=true&intersection_id=INT_1`, { method: 'POST' });
+            setTimeout(() => {
+                fetch(`http://localhost:8000/api/v1/simulation/emergency?active=false`, { method: 'POST' });
+            }, 10000);
+        } catch (err) { console.error(err); }
+    };
+
+    const setWeather = async (w) => {
+        try {
+            await fetch(`http://localhost:8000/api/v1/simulation/weather`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: w })
+            });
+        } catch (err) { console.error(err); }
     };
 
     // Check simulation status on load
@@ -38,11 +70,28 @@ function DashboardContent() {
 
     return (
         <div className="dashboard" style={{
-            backgroundColor: '#0f172a',
+            backgroundColor: bgColor,
             minHeight: '100vh',
-            color: '#fff',
+            color: textPrimary,
             padding: '20px',
         }}>
+            {/* Emergency Banner */}
+            {systemData.emergency_active && (
+                <div style={{
+                    backgroundColor: '#ef4444',
+                    color: '#fff',
+                    padding: '15px',
+                    borderRadius: '8px',
+                    marginBottom: '20px',
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    fontSize: '20px',
+                    boxShadow: '0 0 20px #ef4444',
+                    animation: 'blink 1s infinite'
+                }}>
+                    🚨 EMERGENCY PREEMPTION ACTIVE: CLEARING AMBULANCE ROUTE 🚨
+                </div>
+            )}
             {/* Header */}
             <div style={{
                 display: 'flex',
@@ -63,53 +112,141 @@ function DashboardContent() {
                     }}>
                         UrbanFlow Monitor
                     </h1>
-                    <p style={{ color: '#94a3b8', margin: '8px 0 0 0' }}>
+                    <p style={{ color: textSecondary, margin: '8px 0 0 0' }}>
                         AI-Powered Traffic Orchestration System
                     </p>
                 </div>
 
-                {/* Simulation Control */}
-                <div style={{
-                    backgroundColor: '#1e293b',
-                    padding: '20px',
-                    borderRadius: '12px',
-                    border: '1px solid #334155',
-                    minWidth: '200px',
-                }}>
-                    <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{
-                            width: '8px',
-                            height: '8px',
-                            borderRadius: '50%',
-                            backgroundColor: isConnected ? '#22c55e' : '#ef4444',
-                            boxShadow: isConnected ? '0 0 8px #22c55e' : '0 0 8px #ef4444',
-                        }}></div>
-                        <span style={{ color: '#94a3b8', fontSize: '14px' }}>Status: </span>
-                        <span style={{
-                            color: simulationRunning ? '#22c55e' : '#ef4444',
-                            fontWeight: 'bold',
-                            fontSize: '14px',
-                        }}>
-                            {simulationRunning ? 'RUNNING' : 'STOPPED'}
-                        </span>
-                    </div>
+                {/* Right Side Actions */}
+                <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                    {/* Theme Toggle */}
                     <button
-                        onClick={toggleSimulation}
+                        onClick={toggleTheme}
                         style={{
-                            backgroundColor: simulationRunning ? '#ef4444' : '#22c55e',
+                            backgroundColor: mode === 'dark' ? '#fbbf24' : '#1e293b',
+                            color: mode === 'dark' ? '#1e293b' : '#fbbf24',
+                            border: `1px solid ${mode === 'dark' ? '#fbbf24' : '#475569'}`,
+                            padding: '12px 16px',
+                            borderRadius: '12px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            fontSize: '18px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            minWidth: '50px',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                        }}
+                        title={mode === 'dark' ? 'Switch to Light Mode' : (mode === 'bw' ? 'Switch to Dark Mode' : 'Switch to BW Mode')}
+                    >
+                        {mode === 'dark' ? '☀️' : (mode === 'bw' ? '⚫' : '🌙')}
+                    </button>
+                    {/* Analytics Button */}
+                    <button
+                        onClick={() => navigate('/analytics')}
+                        style={{
+                            backgroundColor: '#3b82f6',
                             color: '#fff',
-                            border: 'none',
-                            padding: '10px 20px',
-                            borderRadius: '6px',
+                            border: '1px solid #60a5fa',
+                            padding: '20px',
+                            borderRadius: '12px',
                             cursor: 'pointer',
                             fontWeight: 'bold',
                             fontSize: '14px',
-                            width: '100%',
-                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            height: '100%'
                         }}
                     >
-                        {simulationRunning ? '⏸ STOP SIMULATION' : '▶ START SIMULATION'}
+                        <span>📊 View Analytics</span>
                     </button>
+
+                    {/* Demo Controls */}
+                    <div style={{
+                        backgroundColor: cardBgColor,
+                        padding: '15px',
+                        borderRadius: '12px',
+                        border: `1px solid ${borderColor}`,
+                        display: 'flex',
+                        gap: '10px'
+                    }}>
+                        <button
+                            onClick={triggerEmergency}
+                            style={{
+                                backgroundColor: '#dc2626',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '8px 12px',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            🚑 Trigger Siren
+                        </button>
+                        <select
+                            onChange={(e) => setWeather(e.target.value)}
+                            value={systemData.weather}
+                            style={{
+                                backgroundColor: '#334155',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '8px',
+                                borderRadius: '6px'
+                            }}
+                        >
+                            <option value="clear">☀️ Clear</option>
+                            <option value="rain">🌧️ Rain</option>
+                            <option value="fog">🌫️ Fog</option>
+                        </select>
+                    </div>
+
+                    {/* Simulation Control */}
+                    <div style={{
+                        backgroundColor: cardBgColor,
+                        padding: '20px',
+                        borderRadius: '12px',
+                        border: `1px solid ${borderColor}`,
+                        minWidth: '200px',
+                    }}>
+                        <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                backgroundColor: isConnected ? '#22c55e' : '#ef4444',
+                                boxShadow: isConnected ? '0 0 8px #22c55e' : '0 0 8px #ef4444',
+                            }}></div>
+                            <span style={{ color: textSecondary, fontSize: '14px' }}>Status: </span>
+                            <span style={{
+                                color: simulationRunning ? '#22c55e' : '#ef4444',
+                                fontWeight: 'bold',
+                                fontSize: '14px',
+                            }}>
+                                {simulationRunning ? 'RUNNING' : 'STOPPED'}
+                            </span>
+                        </div>
+                        <button
+                            onClick={toggleSimulation}
+                            style={{
+                                backgroundColor: simulationRunning ? '#ef4444' : '#22c55e',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '10px 20px',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                fontSize: '14px',
+                                width: '100%',
+                                transition: 'all 0.2s',
+                            }}
+                        >
+                            {simulationRunning ? '⏸ STOP SIMULATION' : '▶ START SIMULATION'}
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -123,7 +260,8 @@ function DashboardContent() {
                 <StatCard title="Total Intersections" value={intersections.length || 9} color="#3b82f6" />
                 <StatCard title="Active Vehicles" value={intersections.reduce((sum, i) => sum + (i.throughput || i.vehicles || 0), 0) || 247} color="#22c55e" />
                 <StatCard title="Avg Wait Time" value={`${(intersections.reduce((sum, i) => sum + (i.queueLength || i.waitTime || 0), 0) / Math.max(intersections.length, 1)).toFixed(1)}s`} color="#f59e0b" />
-                <StatCard title="System Status" value={isConnected ? 'Online' : 'Offline'} color={isConnected ? '#8b5cf6' : '#ef4444'} />
+                <StatCard title="Green Impact (CO2 Saved)" value={`${systemData.co2_saved_kg} kg`} color="#10b981" />
+                <StatCard title="System Status" value={isConnected ? 'Online' : 'Offline'} color={isConnected ? accentColor : '#ef4444'} />
             </div>
 
             {/* Main Content Grid - Map & Camera */}
@@ -135,15 +273,15 @@ function DashboardContent() {
             }}>
                 {/* Traffic Map Card */}
                 <div style={{
-                    backgroundColor: '#1e293b',
+                    backgroundColor: cardBgColor,
                     padding: '20px',
                     borderRadius: '12px',
-                    border: '1px solid #334155',
+                    border: `1px solid ${borderColor}`,
                 }}>
                     <h2 style={{
                         fontSize: '20px',
                         marginBottom: '15px',
-                        color: '#fff',
+                        color: textPrimary,
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px',
@@ -180,35 +318,51 @@ function DashboardContent() {
 
             {/* AI Explainability */}
             <div style={{
-                backgroundColor: '#1e293b',
+                backgroundColor: cardBgColor,
                 padding: '20px',
                 borderRadius: '12px',
-                border: '1px solid #334155',
+                border: `1px solid ${borderColor}`,
             }}>
                 <h2 style={{
                     fontSize: '20px',
                     marginBottom: '15px',
-                    color: '#fff',
+                    color: textPrimary,
                 }}>
                     🤖 AI Decision Explainability
                 </h2>
                 <ExplainabilityPanel />
             </div>
+
+            {/* AI Chatbot */}
+            <Chatbot />
+
+            <style>{`
+                @keyframes blink {
+                    0% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                    100% { opacity: 1; }
+                }
+            `}</style>
         </div>
     );
 }
 
 // Stat Card Component
 function StatCard({ title, value, color }) {
+    const { mode } = useThemeContext();
+    const cardBgColor = mode === 'bw' ? '#111111' : (mode === 'dark' ? '#1e293b' : '#ffffff');
+    const borderColor = mode === 'bw' ? '#333333' : (mode === 'dark' ? '#334155' : '#e2e8f0');
+    const textSecondary = mode === 'bw' ? '#aaaaaa' : (mode === 'dark' ? '#94a3b8' : '#64748b');
+
     return (
         <div style={{
-            backgroundColor: '#1e293b',
+            backgroundColor: cardBgColor,
             padding: '20px',
             borderRadius: '12px',
-            border: '1px solid #334155',
+            border: `1px solid ${borderColor}`,
         }}>
             <p style={{
-                color: '#94a3b8',
+                color: textSecondary,
                 fontSize: '14px',
                 margin: '0 0 8px 0',
             }}>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mock routes file for UrbanFlow when SUMO is not installed -->
+<!-- This file provides minimal routes for testing purposes -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <!-- Vehicle types -->
+    <vType id="car" vClass="passenger" maxSpeed="33.33" accel="2.6" decel="4.5" sigma="0.5"/>
+    <vType id="truck" vClass="truck" maxSpeed="25.00" accel="1.5" decel="4.0" sigma="0.5"/>
+    <vType id="bus" vClass="bus" maxSpeed="20.00" accel="1.2" decel="4.0" sigma="0.5"/>
+    
+    <!-- Simple routes for grid network -->
+    <!-- These routes assume a 4x4 grid with junctions -->
+    <route id="route_north_south" edges="edge_north edge_south"/>
+    <route id="route_east_west" edges="edge_east edge_west"/>
+    <route id="route_diagonal" edges="edge_north edge_center edge_east"/>
+    
+    <!-- Traffic flows (vehicles per hour) -->
+    <flow id="flow_ns" type="car" route="route_north_south" begin="0" end="3600" vehsPerHour="300"/>
+    <flow id="flow_ew" type="car" route="route_east_west" begin="0" end="3600" vehsPerHour="250"/>
+    <flow id="flow_truck" type="truck" route="route_north_south" begin="0" end="3600" vehsPerHour="50"/>
+</routes>

@@ -2,31 +2,20 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-
-const darkTheme = createTheme({
-    palette: {
-        mode: 'dark',
-        primary: {
-            main: '#00cec9', // Vibrant Cyan/Teal
-        },
-        background: {
-            default: '#1e1e2e',
-            paper: '#2d2d3a',
-        },
-    },
-    typography: {
-        fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    },
-});
+import Analytics from './pages/Analytics';
+import MockDataViewer from './pages/MockDataViewer';
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
     return (
-        <ThemeProvider theme={darkTheme}>
+        <ThemeProvider>
             <CssBaseline />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/mock-data" element={<MockDataViewer />} />
             </Routes>
         </ThemeProvider>
     );
