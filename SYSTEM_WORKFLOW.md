@@ -430,6 +430,52 @@ t=2.0s   📱 Next frame arrives...
 
 ---
 
+### PHASE 7: SMART PARKING WORKFLOW (New)
+
+```
+┌──────────────────┐      ┌────────────────────────┐      ┌─────────────────────┐
+│  Citizen PWA     │      │   Parking Manager      │      │ AI Occupancy Agent  │
+│  (Mobile App)    │      │   (FastAPI Backend)    │      │ (Scikit-Learn/PyT)  │
+└────────┬─────────┘      └──────────┬─────────────┘      └──────────┬──────────┘
+         │                           │                               │
+         │  1. Request Parking       │                               │
+         ├──────────────────────────▶│                               │
+         │                           │  2. Fetch Current Status      │
+         │                           ├──────────────────────────────▶│
+         │                           │                               │
+         │                           │  3. Predict Future Avail.     │
+         │                           │◀──────────────────────────────┤
+         │  4. Show Available Spots  │                               │
+         │◀──────────────────────────┤                               │
+         │                           │                               │
+         │  5. Book Spot #12         │                               │
+         ├──────────────────────────▶│                               │
+         │                           │  6. Lock Spot & Generate QR   │
+         │  7. Navigation & QR Code  │                               │
+         │◀──────────────────────────┤                               │
+         └───────────────────────────┘                               ┘
+```
+
+---
+
+### PHASE 8: ENFORCEMENT & PUBLIC SAFETY (New)
+
+#### 1. Illegal Parking Detection
+*   **Trigger**: Vision engine detects a static vehicle in a "No Parking" zone for > 60 seconds.
+*   **Action**: 
+    1.  Snapshot captured.
+    2.  Alert sent to **Enforcement Dashboard**.
+    3.  Parking fine logged in system data.
+
+#### 2. Emergency Vehicle Green Wave
+*   **Trigger**: YOLO detector identifies an **Ambulance** or **Fire Truck** approaching.
+*   **Logic**: 
+    1.  Override RL Agent decision.
+    2.  Immediate phase change to **GREEN** for the emergency lane.
+    3.  Hold other phases to **RED** until the vehicle clears the intersection.
+
+---
+
 ## 🏗️ Technology Stack
 
 ```

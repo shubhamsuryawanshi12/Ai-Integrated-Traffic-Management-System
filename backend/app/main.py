@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import traffic, simulation, parking, prediction, routing
 from app.api.routes import ml_model
 from app.api.routes import chatbot
+from app.api.routes import owner_auth, categories
 from app.core.socket_manager import sio
 import socketio
 import asyncio
@@ -32,6 +33,8 @@ fastapi_app.include_router(prediction.router, prefix="/api/v1/prediction", tags=
 fastapi_app.include_router(routing.router, prefix="/api/v1/routing", tags=["routing"])
 fastapi_app.include_router(ml_model.router, prefix="/api/v1/ml", tags=["ml"])
 fastapi_app.include_router(chatbot.router, prefix="/api/v1/chatbot", tags=["chatbot"])
+fastapi_app.include_router(owner_auth.router, prefix="/api/v1/owner", tags=["owner"])
+fastapi_app.include_router(categories.router, prefix="/api/v1/lot", tags=["categories"])
 
 @fastapi_app.get("/")
 async def root():

@@ -46,3 +46,49 @@ class User(BaseModel):
     phone: Optional[str] = None
     role: str                     # "driver" | "owner" | "admin"
     created_at: datetime = datetime.utcnow()
+
+from app.models.parking_category import CategorySlotConfig, VehicleCategory
+from typing import List, Dict
+from datetime import time
+
+class ParkingLotV2(BaseModel):
+    lot_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    owner_id: str
+    lot_name: str
+    address: str
+    city: str
+    google_maps_link: Optional[str] = None
+    landmark: Optional[str] = None
+    total_capacity: int
+    is_covered: bool = False
+    is_24x7: bool = False
+    opening_time: Optional[time] = None
+    closing_time: Optional[time] = None
+    photo_url: Optional[str] = None
+    is_active: bool = True
+    approved: bool = False
+
+    # Core upgrade: per-category slot configuration
+    categories: List[CategorySlotConfig]
+
+    @property
+    def total_defined_slots(self) -> int:
+        return sum(c.total_slots for c in self.categories)
+
+    @property
+    def total_available_slots(self) -> int:
+        return sum(c.available_slots for c in self.categories)
+
+    @property
+    def occupancy_by_category(self) -> Dict[str, dict]:
+        return {
+            c.category: {
+                "total": c.total_slots,
+                "available": c.available_slots,
+                "occupied": c.total_slots - c.available_slots,
+                "occupancy_pct": round(
+                    (c.total_slots - c.available_slots) / c.total_slots * 100, 1
+                ) if c.total_slots > 0 else 0
+            }
+            for c in self.categories
+        }

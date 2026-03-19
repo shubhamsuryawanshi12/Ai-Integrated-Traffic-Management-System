@@ -4,6 +4,8 @@ import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
+import CategorySetupStep from '../../components/parking/CategorySetupStep';
+import PricingSetupStep from '../../components/parking/PricingSetupStep';
 
 // Red map pin icon
 const customIcon = L.icon({
@@ -41,90 +43,179 @@ const AddParkingPage = () => {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
 
+    // Wizard Step Management
+    const [step, setStep] = useState(1);
+
+    // Step 1: Basic Lot Details
     const [name, setName] = useState('');
-    const [price, setPrice] = useState('');
-    const [slots, setSlots] = useState('');
     const [address, setAddress] = useState('');
-    const [position, setPosition] = useState(null); // [lat, lng]
-    
+    const [position, setPosition] = useState(null);
+    const [totalCapacity, setTotalCapacity] = useState('');
+
+    // Step 2: Categories
+    const [categories, setCategories] = useState({});
+
+    // Step 3: Pricing
+    const [priceData, setPriceData] = useState({});
+
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!position) {
-            alert('Please select a location on the map.');
-            return;
-        }
-
+    const handleSubmit = async () => {
         setLoading(true);
         try {
-            await api.post('/parking/zones/add', {
-                owner_id: currentUser ? currentUser.id : 'OWNER_001',
-                name: name,
+            // Prepare the v2.0 body
+            const formattedCategories = Object.keys(categories).map(catId => ({
+                category: catId,
+                total_slots: categories[catId].total_slots,
+                available_slots: categories[catId].total_slots, // brand new lot
+                has_ev_charging: categories[catId].has_ev_charging,
+                slot_width_m: catId.includes('large') ? 2.8 : 2.5,
+                slot_length_m: catId.includes('large') ? 5.5 : 5.0,
+                ...priceData[catId]
+            }));
+
+            // Register Owner first, then Lot
+            const ownerPayload = {
+                name: currentUser.name,
+                email: currentUser.email,
+                phone: currentUser.phone || "9999999999",
+                business_name: name,
+                role: "owner"
+            };
+
+            const lotPayload = {
+                lot_name: name,
                 address: address,
+                city: "Pune",
+                total_capacity: parseInt(totalCapacity, 10),
+                categories: formattedCategories,
                 latitude: position[0],
-                longitude: position[1],
-                price_per_hour: parseFloat(price),
-                total_slots: parseInt(slots, 10)
+                longitude: position[1]
+            };
+
+            await api.post('/owner/register', {
+                owner: ownerPayload,
+                lot: lotPayload
             });
-            alert('Parking zone submitted for admin approval!');
-            navigate('/owner/my-parkings');
+
+            alert('Parking Lot v2.0 successfully registered and live!');
+            navigate('/owner/dashboard');
         } catch (err) {
-            alert('Failed to submit parking zone.');
+            console.error(err);
+            alert('Failed to register parking lot.');
         } finally {
             setLoading(false);
         }
     };
 
+    const isStepValid = () => {
+        if (step === 1) return name && address && position && totalCapacity > 0;
+        if (step === 2) {
+            const assigned = Object.values(categories).reduce((sum, c) => sum + c.total_slots, 0);
+            return assigned === parseInt(totalCapacity, 10);
+        }
+        if (step === 3) {
+            const activeCats = Object.keys(categories);
+            return activeCats.every(catId => priceData[catId]?.price_per_hour > 0);
+        }
+        return true;
+    };
+
     return (
-        <div style={{ padding: '24px', backgroundColor: '#0f172a', minHeight: '100vh', color: '#f8fafc', fontFamily: 'Inter, sans-serif' }}>
-            <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-                <button onClick={() => navigate('/owner/my-parkings')} style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', marginBottom: '16px' }}>
-                    ← Back to My Parkings
-                </button>
-                <h1 style={{ fontSize: '24px', marginBottom: '24px', marginTop: 0 }}>Add New Parking Zone</h1>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-                    
-                    <form onSubmit={handleSubmit} style={{ backgroundColor: '#1e293b', padding: '24px', borderRadius: '16px', border: '1px solid #334155', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '4px' }}>Zone Name</label>
-                            <input required type="text" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Downtown Metro Plaza" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #475569', backgroundColor: '#0f172a', color: 'white', boxSizing: 'border-box' }} />
-                        </div>
-                        
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '4px' }}>Price per Hour (₹)</label>
-                                <input required type="number" step="0.5" value={price} onChange={e => setPrice(e.target.value)} placeholder="20" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #475569', backgroundColor: '#0f172a', color: 'white', boxSizing: 'border-box' }} />
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '4px' }}>Total Slots</label>
-                                <input required type="number" min="1" value={slots} onChange={e => setSlots(e.target.value)} placeholder="50" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #475569', backgroundColor: '#0f172a', color: 'white', boxSizing: 'border-box' }} />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '4px' }}>Address (Detected from Map)</label>
-                            <textarea required value={address} onChange={e => setAddress(e.target.value)} rows="3" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #475569', backgroundColor: '#0f172a', color: 'white', boxSizing: 'border-box' }} />
-                        </div>
-
-                        <button type="submit" disabled={loading} style={{ backgroundColor: '#3b82f6', color: 'white', padding: '16px', borderRadius: '12px', border: 'none', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginTop: '8px' }}>
-                            {loading ? 'Submitting...' : 'Submit for Approval'}
-                        </button>
-                    </form>
-
-                    <div style={{ backgroundColor: '#1e293b', padding: '16px', borderRadius: '16px', border: '1px solid #334155' }}>
-                        <p style={{ margin: '0 0 12px 0', fontSize: '14px', color: '#94a3b8' }}>Tap anywhere on the map to mark your location.</p>
-                        <div style={{ height: '400px', borderRadius: '8px', overflow: 'hidden' }}>
-                            <MapContainer center={[17.6868, 75.9060]} zoom={13} style={{ height: '100%', width: '100%' }}>
-                                <TileLayer
-                                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                />
-                                <LocationPicker position={position} setPosition={setPosition} setAddress={setAddress} />
-                            </MapContainer>
-                        </div>
+        <div className="p-10 bg-slate-950 min-h-screen text-slate-100 font-inter">
+            <div className="max-w-4xl mx-auto">
+                <div className="flex justify-between items-center mb-10">
+                    <h1 className="text-3xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                        Setup Your Smart Parking v2.0
+                    </h1>
+                    <div className="flex gap-2">
+                        {[1, 2, 3].map(s => (
+                            <div key={s} className={`w-10 h-2 rounded-full transition-all duration-500 ${step >= s ? 'bg-blue-500 shadow-lg shadow-blue-500/20' : 'bg-slate-800'}`} />
+                        ))}
                     </div>
+                </div>
+
+                {step === 1 && (
+                    <div className="grid md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <section className="bg-slate-900/50 p-8 rounded-2xl border border-slate-800 backdrop-blur-sm space-y-6">
+                            <h2 className="text-xl font-bold mb-4">📍 Basic Information</h2>
+                            <div>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Business / Lot Name</label>
+                                <input
+                                    type="text"
+                                    value={name} onChange={e => setName(e.target.value)}
+                                    placeholder="e.g. Green Park Plaza"
+                                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-all focus:ring-4 focus:ring-blue-500/10 outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Total Lot Capacity (Slots)</label>
+                                <input
+                                    type="number"
+                                    value={totalCapacity} onChange={e => setTotalCapacity(e.target.value)}
+                                    placeholder="e.g. 150"
+                                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-all outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Address</label>
+                                <textarea
+                                    value={address} onChange={e => setAddress(e.target.value)}
+                                    rows="4"
+                                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 transition-all outline-none"
+                                />
+                            </div>
+                        </section>
+
+                        <section className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 overflow-hidden">
+                            <h2 className="text-sm font-bold text-slate-500 mb-4 px-2">Tap to mark location</h2>
+                            <div className="h-[350px] rounded-xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
+                                <MapContainer center={[17.6868, 75.9060]} zoom={13} style={{ height: '100%', width: '100%' }}>
+                                    <TileLayer
+                                        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                                        attribution='&copy; OpenStreetMap'
+                                    />
+                                    <LocationPicker position={position} setPosition={setPosition} setAddress={setAddress} />
+                                </MapContainer>
+                            </div>
+                        </section>
+                    </div>
+                )}
+
+                {step === 2 && (
+                    <div className="bg-slate-900/50 p-8 rounded-2xl border border-slate-800 animate-in fade-in slide-in-from-right-8 duration-500">
+                        <CategorySetupStep
+                            categories={categories}
+                            setCategories={setCategories}
+                            totalCapacity={parseInt(totalCapacity)}
+                        />
+                    </div>
+                )}
+
+                {step === 3 && (
+                    <div className="bg-slate-900/50 p-8 rounded-2xl border border-slate-800 animate-in fade-in zoom-in-95 duration-500">
+                        <PricingSetupStep
+                            priceData={priceData}
+                            setPriceData={setPriceData}
+                            categories={categories}
+                        />
+                    </div>
+                )}
+
+                <div className="flex justify-between mt-12 bg-slate-900/80 p-6 rounded-2xl border border-slate-800 sticky bottom-10 backdrop-blur-md">
+                    <button
+                        onClick={() => step > 1 ? setStep(step - 1) : navigate(-1)}
+                        className="px-8 py-3 rounded-xl font-bold text-slate-400 hover:text-white transition-all uppercase text-sm tracking-widest"
+                    >
+                        {step === 1 ? 'Cancel Setup' : 'Previous Step'}
+                    </button>
+                    <button
+                        onClick={() => step < 3 ? setStep(step + 1) : handleSubmit()}
+                        disabled={loading || !isStepValid()}
+                        className="px-10 py-3 rounded-xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-30 disabled:grayscale transition-all shadow-xl shadow-blue-900/20 uppercase text-sm tracking-widest"
+                    >
+                        {loading ? 'Processing...' : (step === 3 ? 'Publish & Go Live 🚀' : 'Next Step →')}
+                    </button>
                 </div>
             </div>
         </div>
