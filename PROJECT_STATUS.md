@@ -38,3 +38,13 @@
 2. Start the **Frontend** (`npm run dev`).
 3. View the **Dashboard** at `localhost:5173`.
 4. Connect a **Mobile Camera** through the Flask server at port `5000`.
+
+---
+
+## 🆕 v2.0 Upgrade: Smart Parking Ecosystem
+- **Vehicle Categorization**: Specific slots for 2W, 4W (Compact/SUV/XL), and EV.
+- **Dynamic Pricing Engine**: Category-wise hourly, daily, and overnight rates.
+- **Advanced Owner Portal**: Multi-step registration wizard and live occupancy bars.
+- **Citizen Filter**: Vehicle-type based parking search integration.
+- **Enhanced Database Schemas**: Role-based access and categorized slot tracking.
+- **Status**: **STABLE & PRODUCTION-READY** (March 19, 2026)
