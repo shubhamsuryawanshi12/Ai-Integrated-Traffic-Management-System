@@ -43,8 +43,9 @@ import os
 import logging
 
 # Configure logging immediately
+_backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 logging.basicConfig(
-    filename='D:/Hackathon/backend/server_debug.log',
+    filename=os.path.join(_backend_dir, 'server_debug.log'),
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
     force=True
@@ -131,6 +132,19 @@ else:
     signal_detector = SignalDetector()
     vehicle_detector = VehicleDetector()
     data_processor = DataProcessor()
+    try:
+        from app.services.vision.hawker_detector import HawkerDetector
+        hawker_detector = HawkerDetector()
+    except Exception as e:
+        print(f"Failed to load HawkerDetector: {e}")
+        hawker_detector = MockDetector()
+
+    try:
+        from app.services.vision.illegal_parking_detector import IllegalParkingDetector
+        illegal_parking_detector = IllegalParkingDetector()
+    except Exception as e:
+        print(f"Failed to load IllegalParkingDetector: {e}")
+        illegal_parking_detector = MockDetector()
 
 # State
 processing_lock = Lock()
@@ -805,6 +819,8 @@ def handle_frame(data):
             with processing_lock:
                 signal_result  = signal_detector.detect(frame)
                 vehicle_result = vehicle_detector.detect(frame)
+                hawker_result  = hawker_detector.detect(frame.shape, vehicle_result.get('all_detections', []))
+                illegal_parking_result = illegal_parking_detector.detect(frame.shape, vehicle_result.get('all_detections', []))
                 processed      = data_processor.process(signal_result, vehicle_result)
 
             sig_state = signal_result.get('signal_state')
@@ -867,10 +883,22 @@ def handle_frame(data):
                 'vehicle_count':      int(total_vehs),
                 'average_speed':      avg_speed,
                 'total_queue_length': int(total_queue)
-            }
+            },
+            'hawker_detection': hawker_result,
+            'illegal_parking_detection': illegal_parking_result
         }
 
         latest_results = result
+        
+        if hawker_result.get('severity') == 'HIGH':
+            socketio.emit('hawker_alert', hawker_result)
+            
+        if illegal_parking_result.get('illegal_parking_detected'):
+            socketio.emit('hawker_alert', {
+                'alert_message': illegal_parking_result.get('message'),
+                'severity': illegal_parking_result.get('severity'),
+                'type': 'illegal_parking'
+            })
 
         # Data collection — thread-safe
         if is_collecting:

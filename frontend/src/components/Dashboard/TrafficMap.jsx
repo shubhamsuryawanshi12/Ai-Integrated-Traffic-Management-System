@@ -122,73 +122,127 @@ const MapController = ({ center, userLocation, onRecenter }) => {
 
 const TrafficMap = ({ intersections: propIntersections, style }) => {
     const [intersections, setIntersections] = useState([]);
-    const [center, setCenter] = useState([20.5937, 78.9629]); // Default: India center
+    const [center, setCenter] = useState([17.6868, 75.9060]); // Default: Solapur
     const [userLocation, setUserLocation] = useState(null);
     const [locationError, setLocationError] = useState(null);
     const [isLocating, setIsLocating] = useState(true);
     const [locationName, setLocationName] = useState('Detecting location...');
 
-    // Get user's current location
+    // Helper: apply a location and reverse-geocode the name
+    const applyLocation = useCallback(async (latitude, longitude, source = '') => {
+        console.log(`📍 Location obtained (${source}):`, latitude, longitude);
+        setUserLocation([latitude, longitude]);
+        setCenter([latitude, longitude]);
+        setIntersections(generateIntersectionsAroundLocation(latitude, longitude));
+        setIsLocating(false);
+
+        // Reverse geocode to get location name
+        try {
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+                { signal: AbortSignal.timeout(5000) }
+            );
+            const data = await response.json();
+            const address = data.address || {};
+            const name = address.suburb || address.neighbourhood || address.city || address.town || address.village || 'Your Location';
+            setLocationName(`${name}, ${address.state || address.country || ''}`);
+        } catch {
+            setLocationName('Your Current Location');
+        }
+    }, []);
+
+    // Fallback: IP-based geolocation
+    const getLocationByIP = useCallback(async () => {
+        try {
+            console.log('🌐 Trying IP-based geolocation...');
+            setLocationName('Detecting via network...');
+            const response = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(8000) });
+            const data = await response.json();
+            if (data.latitude && data.longitude) {
+                await applyLocation(data.latitude, data.longitude, 'IP');
+                return true;
+            }
+        } catch (err) {
+            console.warn('IP geolocation failed:', err.message);
+        }
+        return false;
+    }, [applyLocation]);
+
+    // Get user's current location with multi-strategy approach
     const getCurrentLocation = useCallback(() => {
         setIsLocating(true);
         setLocationError(null);
+        setLocationName('Detecting location...');
 
-        if (!navigator.geolocation) {
-            setLocationError('Geolocation not supported');
-            setIsLocating(false);
-            // Fallback to default location
-            const defaultLat = 28.6139; // Delhi
-            const defaultLng = 77.2090;
+        const fallbackToDefault = () => {
+            const defaultLat = 17.6868; // Solapur
+            const defaultLng = 75.9060;
             setCenter([defaultLat, defaultLng]);
             setUserLocation([defaultLat, defaultLng]);
             setIntersections(generateIntersectionsAroundLocation(defaultLat, defaultLng));
-            setLocationName('Delhi, India (Default)');
+            setLocationName('Solapur, Maharashtra (Default)');
+            setIsLocating(false);
+        };
+
+        if (!navigator.geolocation) {
+            setLocationError('Geolocation not supported');
+            // Try IP fallback before default
+            getLocationByIP().then(success => {
+                if (!success) fallbackToDefault();
+            });
             return;
         }
 
+        let resolved = false;
+
+        // Strategy 1: Fast position (low accuracy, allow cached)
         navigator.geolocation.getCurrentPosition(
             async (position) => {
+                if (resolved) return;
+                resolved = true;
                 const { latitude, longitude } = position.coords;
-                console.log('📍 Location obtained:', latitude, longitude);
+                await applyLocation(latitude, longitude, 'fast');
 
-                setUserLocation([latitude, longitude]);
-                setCenter([latitude, longitude]);
-                setIntersections(generateIntersectionsAroundLocation(latitude, longitude));
-                setIsLocating(false);
-
-                // Reverse geocode to get location name
-                try {
-                    const response = await fetch(
-                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-                    );
-                    const data = await response.json();
-                    const address = data.address;
-                    const name = address.suburb || address.neighbourhood || address.city || address.town || address.village || 'Your Location';
-                    setLocationName(`${name}, ${address.state || address.country || ''}`);
-                } catch (error) {
-                    setLocationName('Your Current Location');
-                }
+                // Strategy 2: Upgrade with high accuracy in background
+                navigator.geolocation.getCurrentPosition(
+                    async (accuratePos) => {
+                        const { latitude: lat2, longitude: lng2 } = accuratePos.coords;
+                        console.log('📍 Upgraded to high-accuracy position');
+                        await applyLocation(lat2, lng2, 'accurate');
+                    },
+                    () => { /* ignore upgrade failure, we already have a position */ },
+                    { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
+                );
             },
-            (error) => {
-                console.error('Location error:', error);
-                setLocationError(error.message);
-                setIsLocating(false);
+            async (error) => {
+                console.warn('Fast location failed:', error.message);
 
-                // Fallback to Delhi, India
-                const defaultLat = 28.6139;
-                const defaultLng = 77.2090;
-                setCenter([defaultLat, defaultLng]);
-                setUserLocation([defaultLat, defaultLng]);
-                setIntersections(generateIntersectionsAroundLocation(defaultLat, defaultLng));
-                setLocationName('Delhi, India (Default)');
+                // Strategy 2: Try high accuracy directly
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        if (resolved) return;
+                        resolved = true;
+                        const { latitude, longitude } = position.coords;
+                        await applyLocation(latitude, longitude, 'highAccuracy');
+                    },
+                    async (error2) => {
+                        if (resolved) return;
+                        resolved = true;
+                        console.warn('High-accuracy location also failed:', error2.message);
+                        setLocationError(error2.message);
+
+                        // Strategy 3: IP-based fallback
+                        const ipSuccess = await getLocationByIP();
+                        if (!ipSuccess) {
+                            fallbackToDefault();
+                        }
+                    },
+                    { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
+                );
             },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            }
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
         );
-    }, []);
+    }, [applyLocation, getLocationByIP]);
 
     // Get location on mount
     useEffect(() => {

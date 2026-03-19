@@ -53,3 +53,7 @@ yarn-error.log
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+backend/server_debug.log

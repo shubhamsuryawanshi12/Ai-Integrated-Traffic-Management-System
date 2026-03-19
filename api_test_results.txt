@@ -1,0 +1,35 @@
+--- Simulation API ---
+Start: (200, {'status': 'started', 'mode': 'simulation'})
+Status: (200, {'running': True})
+Weather Rain: (422, {'detail': [{'type': 'missing', 'loc': ['body', 'mode'], 'msg': 'Field required', 'input': None}]})
+Weather Fog: (422, {'detail': [{'type': 'missing', 'loc': ['body', 'mode'], 'msg': 'Field required', 'input': None}]})
+Weather Clear: (422, {'detail': [{'type': 'missing', 'loc': ['body', 'mode'], 'msg': 'Field required', 'input': None}]})
+Emergency: (200, {'status': 'success', 'emergency': True, 'intersection': 'INT_1'})
+
+--- Parking API ---
+Zones count: 6
+Zone[0] keys: ['zone_id', 'name', 'lat', 'lng', 'total_slots', 'occupied_slots', 'zone_type']
+Zone[0] lat, lng: 17.683, 75.91
+Predict PZ_001: (404, {'detail': 'Zone not found'})
+Predict INVALID: (404, {'detail': 'Zone not found'})
+
+--- Prediction API ---
+Forecast items count: 24
+Forecast[0] keys: ['time', 'predicted_volume', 'baseline_wait_sec', 'ai_wait_sec', 'confidence_score']
+
+--- Routing API ---
+Optimize body missing field: (422, {'detail': [{'type': 'missing', 'loc': ['body'], 'msg': 'Field required', 'input': None}]})
+Optimize: (422, {'detail': [{'type': 'missing', 'loc': ['body'], 'msg': 'Field required', 'input': None}]})
+
+--- Chatbot API ---
+Chat empty body: (422, {'detail': [{'type': 'missing', 'loc': ['body'], 'msg': 'Field required', 'input': None}]})
+Chat: (422, {'detail': [{'type': 'missing', 'loc': ['body'], 'msg': 'Field required', 'input': None}]})
+
+--- Camera Server API ---
+Status: (200, {'avg_fps': 0.0, 'camera_stats': {'connected': False, 'device_info': {}, 'fps': 0, 'frame_count': 0, 'is_running': False, 'queue_size': 0, 'resolution': '640x480', 'source': 'mobile', 'type': 'mobile'}, 'collected_samples': 0, 'cv_available': True, 'detector_stats': {'signal_detections': 0, 'vehicle_detections': 0}, 'frame_count': 0, 'is_collecting': False, 'is_processing': False, 'status': 'running', 'uptime': 157.6})
+Latest: (200, {})
+RL State: (200, {'reward': 0.0, 'state': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'timestamp': '2026-03-16T22:56:01.628782'})
+
+--- Stopping Simulation ---
+Stop: (200, {'status': 'stopped'})
+Status after stop: (200, {'running': False})

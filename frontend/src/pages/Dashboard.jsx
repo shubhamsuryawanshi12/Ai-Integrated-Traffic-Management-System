@@ -5,6 +5,7 @@ import TrafficCharts from '../components/Analytics/TrafficCharts';
 import ExplainabilityPanel from '../components/Dashboard/ExplainabilityPanel';
 import CameraFeed from '../components/Dashboard/CameraFeed';
 import Chatbot from '../components/Dashboard/Chatbot';
+import AlertPanel from '../components/Dashboard/AlertPanel';
 import { TrafficProvider, useTraffic } from '../context/TrafficContext';
 import { useThemeContext } from '../context/ThemeContext';
 
@@ -306,7 +307,7 @@ function DashboardContent() {
                 <CameraFeed />
             </div>
 
-            {/* Charts Grid */}
+            {/* Charts Grid & Alerts */}
             <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
@@ -314,6 +315,7 @@ function DashboardContent() {
                 marginBottom: '20px',
             }}>
                 <TrafficCharts />
+                <AlertPanel />
             </div>
 
             {/* AI Explainability */}

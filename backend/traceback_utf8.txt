@@ -1,0 +1,2 @@
+﻿WARNING: SUMO/TraCI not available. Running in MOCK mode only.
+WARNING: SUMO_HOME not set. Simulation features will not work.

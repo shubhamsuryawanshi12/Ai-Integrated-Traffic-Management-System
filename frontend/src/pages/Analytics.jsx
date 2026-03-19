@@ -4,21 +4,12 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar
 } from 'recharts';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 
-// Mock Data
-const WAIT_TIME_DATA = [
+// Initial Mock Data Fallback
+const INIT_WAIT_TIME_DATA = [
     { time: '08:00', baseline: 120, ai: 45 },
     { time: '09:00', baseline: 180, ai: 60 },
-    { time: '10:00', baseline: 140, ai: 50 },
-    { time: '11:00', baseline: 90, ai: 35 },
-    { time: '12:00', baseline: 110, ai: 40 },
-    { time: '13:00', baseline: 100, ai: 38 },
-    { time: '14:00', baseline: 95, ai: 35 },
-    { time: '15:00', baseline: 130, ai: 48 },
-    { time: '16:00', baseline: 160, ai: 55 },
-    { time: '17:00', baseline: 210, ai: 70 },
-    { time: '18:00', baseline: 190, ai: 65 },
-    { time: '19:00', baseline: 140, ai: 50 },
 ];
 
 const EMISSIONS_DATA = [
@@ -71,6 +62,27 @@ const ChartCard = ({ title, children }) => (
 
 const Analytics = () => {
     const navigate = useNavigate();
+    const [waitTimeData, setWaitTimeData] = React.useState(INIT_WAIT_TIME_DATA);
+    const [emissionsData, setEmissionsData] = React.useState(EMISSIONS_DATA);
+
+    React.useEffect(() => {
+        const fetchPredictions = async () => {
+            try {
+                const res = await api.get('/prediction/forecast');
+                if (res.data && res.data.forecast) {
+                    const mapped = res.data.forecast.map(item => ({
+                        time: item.time,
+                        baseline: item.baseline_wait_sec,
+                        ai: item.ai_wait_sec,
+                        volume: item.predicted_volume
+                    }));
+                    setWaitTimeData(mapped);
+                }
+            } catch (e) { console.error('Error fetching traffic forecast:', e); }
+        };
+        fetchPredictions();
+    }, []);
+
 
     return (
         <div style={{
@@ -136,9 +148,9 @@ const Analytics = () => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))', gap: '30px' }}>
 
                 {/* Wait Time Comparison */}
-                <ChartCard title="🚦 Avg Wait Time (Seconds)">
+                <ChartCard title="🚦 Avg Wait Time (Seconds) - 24Hr A3C vs Baseline Prediction">
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={WAIT_TIME_DATA}>
+                        <AreaChart data={waitTimeData}>
                             <defs>
                                 <linearGradient id="colorBase" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
@@ -173,6 +185,29 @@ const Analytics = () => {
                                 cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                             />
                             <Bar dataKey="saved" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Fuel Saved" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </ChartCard>
+
+                {/* Intersection Comparison */}
+                <ChartCard title="🏢 Intersection Performance Comparison">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={[
+                            { name: 'INT_1', vehicles: 450, waitTime: 12, queue: 8 },
+                            { name: 'INT_2', vehicles: 620, waitTime: 18, queue: 14 },
+                            { name: 'INT_3', vehicles: 310, waitTime: 9, queue: 5 },
+                            { name: 'INT_4', vehicles: 540, waitTime: 15, queue: 11 },
+                        ]}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                            <XAxis dataKey="name" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                            <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} />
+                            <Tooltip
+                                contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px', color: '#fff' }}
+                                cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                            />
+                            <Bar dataKey="vehicles" fill="#3b82f6" name="Vehicle Count" radius={[4, 4, 0, 0]} />
+                            <Bar dataKey="waitTime" fill="#f59e0b" name="Avg Wait (s)" radius={[4, 4, 0, 0]} />
+                            <Bar dataKey="queue" fill="#ef4444" name="Queue Length" radius={[4, 4, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartCard>

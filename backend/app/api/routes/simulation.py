@@ -20,7 +20,7 @@ try:
 except ImportError:
     CAMERA_AVAILABLE = False
 
-from app.services.ai_engine.rl_agent import RLAgent
+from app.services.ai_engine.a3c_agent import RLAgent
 from typing import Dict, Optional, List, Any
 import threading
 import time
@@ -216,7 +216,7 @@ class SimulationManager:
                             # state_vec: [queue, count, speed, phase] (4 dims)
                             # Pad to agent's expected input dimension (32)
                             local_state = state_vec + [0.0] * (32 - len(state_vec))
-                            action, _, _ = self.agent.get_action(local_state)
+                            action, _, _ = self.agent.get_action(local_state, intersection_id=ts_id)
                             
                         actions[ts_id] = action
                         
@@ -313,7 +313,8 @@ sim_manager = SimulationManager()
 
 # Background task to broadcast
 import asyncio
-from app.core.socket_manager import broadcast_traffic_update
+from app.core.socket_manager import broadcast_traffic_update, broadcast_parking_update, sio
+from app.services.ai_engine.anomaly_detector import anomaly_detector
 
 async def broadcast_loop():
     print("Broadcast loop started")
@@ -321,8 +322,23 @@ async def broadcast_loop():
         if sim_manager.running:
             state = sim_manager.get_latest_state()
             if state:
-                # print(f"Broadcasting state with {len(state.get('intersections', []))} intersections")
                 await broadcast_traffic_update(state)
+                
+                # Check for anomalies and broadcast alerts
+                anomalies = anomaly_detector.detect_anomalies(state.get('intersections', []))
+                for anomaly in anomalies:
+                    # Emit alert via socketio to the frontend AlertPanel
+                    await sio.emit('hawker_alert', {
+                        'alert_message': anomaly['message'],
+                        'severity': anomaly['severity'],
+                        'type': 'traffic_anomaly'
+                    })
+        
+        # Broadcast parking updates independently mapping every 2 seconds
+        # For demo, simulate updates
+        # parking_manager.simulate_random_updates()
+        # await broadcast_parking_update({"zones": parking_manager.get_all_zones()})
+        
         await asyncio.sleep(2)
 
 # @router.on_event("startup")
@@ -393,10 +409,10 @@ async def trigger_emergency(intersection_id: str = "INT_1", active: bool = True)
     return {"status": "success", "emergency": active, "intersection": intersection_id}
 
 @router.post("/weather")
-async def set_weather(mode: str = Body(..., embed=True)):
+async def set_weather(condition: str = Body(..., embed=True)):
     """Set simulation weather: clear, rain, fog"""
-    if mode not in ["clear", "rain", "fog"]:
+    if condition not in ["clear", "rain", "fog"]:
         raise HTTPException(status_code=400, detail="Invalid weather mode")
-    sim_manager.weather_mode = mode
-    return {"status": "success", "weather": mode}
+    sim_manager.weather_mode = condition
+    return {"status": "success", "weather": condition}
 

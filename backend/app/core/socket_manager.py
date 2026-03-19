@@ -22,3 +22,12 @@ async def broadcast_traffic_update(data):
 
 async def broadcast_ai_decision(data):
     await sio.emit('ai_decision', data)
+
+async def broadcast_parking_update():
+    """
+    Emits parking_update event to all connected clients.
+    Called after every successful booking or cancellation.
+    """
+    from app.services.parking.parking_store import parking_areas
+    zones = [z for z in parking_areas.values() if z.get("approved", False)]
+    await sio.emit("parking_update", {"zones": zones})

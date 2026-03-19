@@ -52,6 +52,11 @@ class WebSocketService {
         this.socket.on('metrics', (metrics) => {
             this.emit('metrics', metrics);
         });
+
+        // Parking updates
+        this.socket.on('parking_update', (data) => {
+            this.emit('parking_update', data);
+        });
     }
 
     on(event, callback) {
@@ -59,6 +64,13 @@ class WebSocketService {
             this.listeners.set(event, []);
         }
         this.listeners.get(event).push(callback);
+    }
+
+    off(event, callback) {
+        if (this.listeners.has(event)) {
+            const callbacks = this.listeners.get(event);
+            this.listeners.set(event, callbacks.filter(cb => cb !== callback));
+        }
     }
 
     emit(event, data) {

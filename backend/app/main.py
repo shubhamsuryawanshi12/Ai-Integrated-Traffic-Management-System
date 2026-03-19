@@ -7,7 +7,7 @@ if sys.platform == 'win32' and sys.stdout.encoding != 'utf-8':
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import traffic, simulation
+from app.api.routes import traffic, simulation, parking, prediction, routing
 from app.api.routes import ml_model
 from app.api.routes import chatbot
 from app.core.socket_manager import sio
@@ -27,6 +27,9 @@ fastapi_app.add_middleware(
 
 fastapi_app.include_router(traffic.router, prefix="/api/v1/traffic", tags=["traffic"])
 fastapi_app.include_router(simulation.router, prefix="/api/v1/simulation", tags=["simulation"])
+fastapi_app.include_router(parking.router, prefix="/api/v1/parking", tags=["parking"])
+fastapi_app.include_router(prediction.router, prefix="/api/v1/prediction", tags=["prediction"])
+fastapi_app.include_router(routing.router, prefix="/api/v1/routing", tags=["routing"])
 fastapi_app.include_router(ml_model.router, prefix="/api/v1/ml", tags=["ml"])
 fastapi_app.include_router(chatbot.router, prefix="/api/v1/chatbot", tags=["chatbot"])
 
