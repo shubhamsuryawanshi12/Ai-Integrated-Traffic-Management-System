@@ -1,4 +1,6 @@
-# 🚦 UrbanFlow: AI-Integrated Traffic Management system
+# 🚦 UrbanFlow: AI-Integrated Traffic Management system (v2.0)
+
+> **Upgrade Notice (v2.0)**: We have released the **Vehicle Categorization & Slot Management** upgrade for the Smart Parking ecosystem. Owners can now manage 2W, 4W, and EV slots with dynamic pricing.
 
 > **Smart Cities, Smoother Journeys.**  
 > An end-to-end, AI-powered traffic optimization suite that leverages Computer Vision, Reinforcement Learning, and Real-time Analytics to solve urban congestion.
